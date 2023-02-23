@@ -27,8 +27,8 @@ describe("Eclipse", async function () {
     const EclipseCollectionFactory = await ethers.getContractFactory(
       "EclipseCollectionFactory"
     );
-    const EclipseMintAllocator = await ethers.getContractFactory(
-      "EclipseMintAllocator"
+    const EclipseMintGatePublic = await ethers.getContractFactory(
+      "EclipseMintGatePublic"
     );
     const Eclipse = await ethers.getContractFactory("Eclipse");
     const EclipseStorage = await ethers.getContractFactory("EclipseStorage");
@@ -41,7 +41,7 @@ describe("Eclipse", async function () {
     );
     const collectionFactory = await EclipseCollectionFactory.deploy("uri://");
 
-    const mintAlloc = await EclipseMintAllocator.deploy();
+    const mintGatePublic = await EclipseMintGatePublic.deploy();
 
     const eclipse = await Eclipse.deploy(
       collectionFactory.address,
@@ -50,17 +50,15 @@ describe("Eclipse", async function () {
       owner.address
     );
 
-    const minter = await EclipseMinter.deploy(
-      eclipse.address,
-      mintAlloc.address
-    );
+    const minter = await EclipseMinter.deploy(eclipse.address);
 
     const implementation = await EclipseERC721.deploy();
 
     await eclipse.addMinter(0, minter.address);
+    await eclipse.addGate(0, mintGatePublic.address);
     await collectionFactory.addErc721Implementation(0, implementation.address);
     await collectionFactory.setAdminAccess(eclipse.address, true);
-    await mintAlloc.setAdminAccess(minter.address, true);
+    await mintGatePublic.setAdminAccess(minter.address, true);
     await paymentSplitterFactory.setAdminAccess(eclipse.address, true);
     await minter.setAdminAccess(eclipse.address, true);
     await store.setAdminAccess(eclipse.address, true);
@@ -72,7 +70,7 @@ describe("Eclipse", async function () {
       paymentSplitter,
       implementation,
       minter,
-      mintAlloc,
+      mintAlloc: mintGatePublic,
       owner,
       artistAccount,
       otherAccount,
@@ -87,14 +85,42 @@ describe("Eclipse", async function () {
     artistAccount,
     otherAccount,
     maxSupply = 100,
-    index = 0
+    index = 0,
+    maxSupplyMinter = maxSupply
   ) {
     const name = "Coll";
     const symbol = "SYM";
     const erc721Index = 0;
     const pricingMode = 0;
     const startTime = (await time.latest()) + 60 * 60 * 10;
+    const endTime = startTime + 1000 + 2000;
 
+    const gateCalldata = ethers.utils.defaultAbiCoder.encode(
+      [
+        {
+          components: [
+            {
+              internalType: "uint24",
+              name: "allowedPerWallet",
+              type: "uint24",
+            },
+            {
+              internalType: "uint8",
+              name: "allowedPerTransaction",
+              type: "uint8",
+            },
+          ],
+          name: "params",
+          type: "tuple",
+        },
+      ],
+      [
+        {
+          allowedPerWallet: 0,
+          allowedPerTransaction: 0,
+        },
+      ]
+    );
     const pricingData = ethers.utils.defaultAbiCoder.encode(
       [
         {
@@ -111,18 +137,35 @@ describe("Eclipse", async function () {
             },
             {
               internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
               name: "price",
               type: "uint256",
             },
             {
-              internalType: "uint8",
-              name: "allowedPerTransaction",
-              type: "uint8",
+              internalType: "uint256",
+              name: "maxSupply",
+              type: "uint256",
             },
             {
-              internalType: "uint24",
-              name: "allowedPerWallet",
-              type: "uint24",
+              components: [
+                {
+                  internalType: "uint8",
+                  name: "gateType",
+                  type: "uint8",
+                },
+                {
+                  internalType: "bytes",
+                  name: "gateCalldata",
+                  type: "bytes",
+                },
+              ],
+              name: "gate",
+              type: "tuple",
+              internalType: "GateParams",
             },
           ],
           name: "params",
@@ -134,9 +177,13 @@ describe("Eclipse", async function () {
         {
           artist: artistAccount.address,
           startTime,
+          endTime,
           price: ONE_GWEI,
-          allowedPerTransaction: 0,
-          allowedPerWallet: 0,
+          maxSupply: maxSupplyMinter,
+          gate: {
+            gateType: 0,
+            gateCalldata,
+          },
         },
       ]
     );
@@ -265,7 +312,7 @@ describe("Eclipse", async function () {
 
       // console.log("a", artist);
 
-      const mint = await minter.mintOne(info.collection.contractAddress, {
+      const mint = await minter.mintOne(info.collection.contractAddress, 0, {
         value: ONE_GWEI,
       });
 
@@ -274,9 +321,11 @@ describe("Eclipse", async function () {
     it("should mint many", async () => {
       const { minter, info, other2 } = await init();
 
-      await minter.connect(other2).mint(info.collection.contractAddress, "4", {
-        value: BigNumber.from(ONE_GWEI).mul(4),
-      });
+      await minter
+        .connect(other2)
+        .mint(info.collection.contractAddress, 0, "4", {
+          value: BigNumber.from(ONE_GWEI).mul(4),
+        });
 
       // console.log("name", await collection.name());
     });
@@ -294,12 +343,14 @@ describe("Eclipse", async function () {
       );
       await time.increaseTo(startTime + 1000);
 
-      await minter.connect(other2).mint(info.collection.contractAddress, "2", {
-        value: BigNumber.from(ONE_GWEI).mul(2),
-      });
+      await minter
+        .connect(other2)
+        .mint(info.collection.contractAddress, 0, "2", {
+          value: BigNumber.from(ONE_GWEI).mul(2),
+        });
       const partialMint = await minter
         .connect(other2)
-        .mint(info.collection.contractAddress, "2", {
+        .mint(info.collection.contractAddress, 0, "2", {
           value: BigNumber.from(ONE_GWEI).mul(2),
         });
 
@@ -310,13 +361,13 @@ describe("Eclipse", async function () {
 
       const mintOneFail = minter
         .connect(other2)
-        .mintOne(info.collection.contractAddress, {
+        .mintOne(info.collection.contractAddress, 0, {
           value: BigNumber.from(ONE_GWEI),
         });
 
       const mintManyFail = minter
         .connect(other2)
-        .mint(info.collection.contractAddress, "4", {
+        .mint(info.collection.contractAddress, 0, "4", {
           value: BigNumber.from(ONE_GWEI).mul(4),
         });
 
@@ -328,11 +379,16 @@ describe("Eclipse", async function () {
     it("should fail on mint wrong amount", async () => {
       const { info, minter } = await init();
 
-      const shouldFailMint = minter.mintOne(info.collection.contractAddress, {
-        value: BigNumber.from(ONE_GWEI).sub(1),
-      });
+      const shouldFailMint = minter.mintOne(
+        info.collection.contractAddress,
+        0,
+        {
+          value: BigNumber.from(ONE_GWEI).sub(1),
+        }
+      );
       const shouldFailMint2 = minter.mint(
         info.collection.contractAddress,
+        0,
         "3",
         {
           value: BigNumber.from(ONE_GWEI).mul(3).sub(1),

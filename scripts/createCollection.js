@@ -28,24 +28,24 @@ async function main() {
       {
         components: [
           {
-            internalType: "address",
             name: "artist",
             type: "address",
           },
           {
-            internalType: "uint256",
             name: "startTime",
             type: "uint256",
           },
           {
-            internalType: "uint256",
             name: "price",
             type: "uint256",
           },
           {
-            internalType: "uint8",
             name: "allowedPerTransaction",
             type: "uint8",
+          },
+          {
+            name: "allowedPerWallet",
+            type: "uint24",
           },
         ],
         name: "params",
@@ -59,6 +59,7 @@ async function main() {
         startTime,
         price: price,
         allowedPerTransaction: 5,
+        allowedPerWallet: 5,
       },
     ]
   );
@@ -81,10 +82,10 @@ async function main() {
     },
   ]);
 
-  await artistAccount.sendTransaction({
-    to: eclipse.address,
-    data: calldata,
-  });
+  // await artistAccount.sendTransaction({
+  //   to: eclipse.address,
+  //   data: calldata,
+  // });
 
   // const EclipseStore = await ethers.getContractFactory("EclipseStore");
   // const store = EclipseStore.attach(eclipseStoreAddress)

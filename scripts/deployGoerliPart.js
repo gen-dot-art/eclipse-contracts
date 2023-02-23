@@ -9,6 +9,10 @@ async function main() {
   // Contracts are deployed using the first signer/account by default
   const [owner] = await ethers.getSigners();
 
+  const eclipseAddress = "0x963F27FBc71B453d883BE0978742a03f469b4dad";
+  const collectionFactoryAddress = "0xa567567C3f0dbBab756853dBE97203082B9b4eab";
+  const mintGatePublicAddress = "0xCF12A14A49DfAF0c1BF7C0bca57bDd806Af459E2";
+
   const EclipseMinter = await ethers.getContractFactory("EclipseMinter");
 
   // const EclipseProxy = await ethers.getContractFactory('EclipseProxy');
@@ -22,8 +26,8 @@ async function main() {
   const EclipseCollectionFactory = await ethers.getContractFactory(
     "EclipseCollectionFactory"
   );
-  const EclipseMintAllocator = await ethers.getContractFactory(
-    "EclipseMintAllocator"
+  const EclipseMintGatePublic = await ethers.getContractFactory(
+    "EclipseMintGatePublic"
   );
   const Eclipse = await ethers.getContractFactory("Eclipse");
 
@@ -54,16 +58,17 @@ async function main() {
   // );
   // await paymentSplitterFactory.deployed();
 
-  const collectionFactory = await EclipseCollectionFactory.deploy("uri://");
-  console.log(
-    "yarn hardhat verify --network goerli",
-    [collectionFactory.address]
-      .concat(["uri://"].map((a) => `"${a}"`))
-      .join(" ")
-  );
-  await collectionFactory.deployed();
+  // const collectionFactory = await EclipseCollectionFactory.deploy("uri://");
+  // console.log(
+  //   "yarn hardhat verify --network goerli",
+  //   [collectionFactory.address]
+  //     .concat(["uri://"].map((a) => `"${a}"`))
+  //     .join(" ")
+  // );
+  // await collectionFactory.deployed();
 
-  // const mintAlloc = await EclipseMintAllocator.deploy();
+  const mintGatePublic = EclipseMintGatePublic.attach(mintGatePublicAddress);
+  // const mintAlloc = await EclipseMintGatePublic.deploy();
   // console.log(
   //   "yarn hardhat verify --network goerli",
   //   [mintAlloc.address].concat([].map((a) => `"${a}"`)).join(" ")
@@ -83,14 +88,19 @@ async function main() {
   // );
   // await eclipse.deployed();
 
-  // const minter = await EclipseMinter.deploy(eclipse.address, mintAlloc.address);
-  // console.log(
-  //   "yarn hardhat verify --network goerli",
-  //   [minter.address]
-  //     .concat([eclipse.address, mintAlloc.address].map((a) => `"${a}"`))
-  //     .join(" ")
+  const eclipse = Eclipse.attach(eclipseAddress);
+  // const collectionFactory = EclipseCollectionFactory.attach(
+  //   collectionFactoryAddress
   // );
-  // await minter.deployed();
+
+  const minter = await EclipseMinter.deploy(eclipse.address);
+  console.log(
+    "yarn hardhat verify --network goerli",
+    [minter.address]
+      .concat([eclipse.address, mintGatePublic.address].map((a) => `"${a}"`))
+      .join(" ")
+  );
+  await minter.deployed();
 
   // const implementation = await EclipseERC721.deploy();
   // console.log(
@@ -99,19 +109,12 @@ async function main() {
   // );
   // await implementation.deployed();
 
-  // await eclipse.addMinter(0, minter.address);
+  await eclipse.addMinter(0, minter.address);
   // await collectionFactory.addErc721Implementation(0, implementation.address);
-  await collectionFactory.addErc721Implementation(
-    0,
-    "0xfCD6f325e546F65fB2572Fa064A761A1f61BaA2F"
-  );
-  await collectionFactory.setAdminAccess(
-    "0xe6E29776931EaAeb64305b908C048BD89E762301",
-    true
-  );
-  // await mintAlloc.setAdminAccess(minter.address, true);
+  // await collectionFactory.setAdminAccess(eclipse.address, true);
+  await mintGatePublic.setAdminAccess(minter.address, true);
   // await paymentSplitterFactory.setAdminAccess(eclipse.address, true);
-  // await minter.setAdminAccess(eclipse.address, true);
+  await minter.setAdminAccess(eclipse.address, true);
   // await store.setAdminAccess(eclipse.address, true);
 }
 

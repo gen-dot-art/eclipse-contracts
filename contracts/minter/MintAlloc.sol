@@ -5,6 +5,7 @@ library MintAlloc {
     struct State {
         uint8 allowedPerTransaction;
         uint24 allowedPerWallet;
+        uint256 minted;
         mapping(address => uint256) mints;
     }
 
@@ -30,11 +31,11 @@ library MintAlloc {
 
     function init(
         State storage state,
-        uint8 allowedPerTransaction,
-        uint24 allowedPerWallet
+        uint24 allowedPerWallet,
+        uint8 allowedPerTransaction
     ) internal {
-        state.allowedPerTransaction = allowedPerTransaction;
         state.allowedPerWallet = allowedPerWallet;
+        state.allowedPerTransaction = allowedPerTransaction;
     }
 
     function update(
@@ -43,5 +44,6 @@ library MintAlloc {
         uint256 amount
     ) internal {
         state.mints[user] += amount;
+        state.minted += amount;
     }
 }

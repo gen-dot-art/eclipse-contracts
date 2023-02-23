@@ -45,6 +45,7 @@ contract Eclipse is EclipseAccess {
     address public paymentSplitterFactory;
     address public platformPayoutAddress;
     mapping(uint8 => address) public minters;
+    mapping(uint8 => address) public gateTypes;
 
     EclipseStorage public store;
 
@@ -218,6 +219,13 @@ contract Eclipse is EclipseAccess {
      */
     function addMinter(uint8 index, address minter) external onlyAdmin {
         minters[index] = minter;
+    }
+
+    /**
+     * @dev Add a gatre contract and map by index
+     */
+    function addGate(uint8 index, address gate) external onlyAdmin {
+        gateTypes[index] = gate;
     }
 
     /**

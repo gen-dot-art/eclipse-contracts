@@ -8,11 +8,11 @@ const { ethers } = require("hardhat");
 async function main() {
   // Contracts are deployed using the first signer/account by default
   const [owner] = await ethers.getSigners();
-
+  const URI = "https://test-api.eclipse.art/search/metadata/";
   const EclipseMinter = await ethers.getContractFactory("EclipseMinter");
 
   // const EclipseProxy = await ethers.getContractFactory('EclipseProxy');
-  const EclipseERC721 = await ethers.getContractFactory("EclipseERC721");
+  const EclipseERC721 = await ethers.getContractFactory("EclipseERC721Testing");
   const EclipsePaymentSplitterFactory = await ethers.getContractFactory(
     "EclipsePaymentSplitterFactory"
   );
@@ -22,8 +22,8 @@ async function main() {
   const EclipseCollectionFactory = await ethers.getContractFactory(
     "EclipseCollectionFactory"
   );
-  const EclipseMintAllocator = await ethers.getContractFactory(
-    "EclipseMintAllocator"
+  const EclipseMintGatePublic = await ethers.getContractFactory(
+    "EclipseMintGatePublic"
   );
   const Eclipse = await ethers.getContractFactory("Eclipse");
 
@@ -54,21 +54,19 @@ async function main() {
   );
   await paymentSplitterFactory.deployed();
 
-  const collectionFactory = await EclipseCollectionFactory.deploy("uri://");
+  const collectionFactory = await EclipseCollectionFactory.deploy(URI);
   console.log(
     "yarn hardhat verify --network goerli",
-    [collectionFactory.address]
-      .concat(["uri://"].map((a) => `"${a}"`))
-      .join(" ")
+    [collectionFactory.address].concat([URI].map((a) => `"${a}"`)).join(" ")
   );
   await collectionFactory.deployed();
 
-  const mintAlloc = await EclipseMintAllocator.deploy();
+  const mintGatePublic = await EclipseMintGatePublic.deploy();
   console.log(
     "yarn hardhat verify --network goerli",
-    [mintAlloc.address].concat([].map((a) => `"${a}"`)).join(" ")
+    [mintGatePublic.address].concat([].map((a) => `"${a}"`)).join(" ")
   );
-  await mintAlloc.deployed();
+  await mintGatePublic.deployed();
 
   const eclipseArgs = [
     collectionFactory.address,
@@ -83,12 +81,10 @@ async function main() {
   );
   await eclipse.deployed();
 
-  const minter = await EclipseMinter.deploy(eclipse.address, mintAlloc.address);
+  const minter = await EclipseMinter.deploy(eclipse.address);
   console.log(
     "yarn hardhat verify --network goerli",
-    [minter.address]
-      .concat([eclipse.address, mintAlloc.address].map((a) => `"${a}"`))
-      .join(" ")
+    [minter.address].concat([eclipse.address].map((a) => `"${a}"`)).join(" ")
   );
   await minter.deployed();
 
@@ -100,9 +96,11 @@ async function main() {
   await implementation.deployed();
 
   await eclipse.addMinter(0, minter.address);
+  await eclipse.addGate(0, mintGatePublic.address);
+
   await collectionFactory.addErc721Implementation(0, implementation.address);
   await collectionFactory.setAdminAccess(eclipse.address, true);
-  await mintAlloc.setAdminAccess(minter.address, true);
+  await mintGatePublic.setAdminAccess(minter.address, true);
   await paymentSplitterFactory.setAdminAccess(eclipse.address, true);
   await minter.setAdminAccess(eclipse.address, true);
   await store.setAdminAccess(eclipse.address, true);

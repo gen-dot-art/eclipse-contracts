@@ -1,0 +1,78 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "minterContract",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "addGateForCollection",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "minterContract",
+        "type": "address"
+      }
+    ],
+    "name": "isGated",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "minterContract",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "isUserAllowed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

@@ -41,7 +41,13 @@ contract EclipseERC721 is
     /**
      *@dev Emitted on mint
      */
-    event Mint(uint256 tokenId, uint256 collectionId, address to, bytes32 hash);
+    event Mint(
+        uint256 tokenId,
+        uint256 collectionId,
+        address to,
+        address minter,
+        bytes32 hash
+    );
 
     event RoyaltyReceiverChanged(address receiver);
 
@@ -80,17 +86,16 @@ contract EclipseERC721 is
     /**
      * @dev Helper method to check allowed minters
      */
-    function _checkMint(uint256 amount) internal view returns (uint256) {
+    function _checkMint(uint256 amount) internal view {
         require(_minters[_msgSender()], "only minter allowed");
         require(!_paused, "minting paused");
         uint256 totalSupply = totalSupply();
         uint256 maxSupply = _info.maxSupply;
-        if (totalSupply + amount <= maxSupply) {
-            return amount;
-        }
-        uint256 mints = maxSupply - totalSupply;
-        require(mints > 0, "sold out");
-        return mints;
+        require(totalSupply < maxSupply, "sold out");
+        require(
+            totalSupply + amount <= maxSupply,
+            "amount exceeds total supply"
+        );
     }
 
     /**
@@ -98,16 +103,11 @@ contract EclipseERC721 is
      * @param to address to mint to
      * @param amount amount of tokens to mint
      */
-    function mint(address to, uint256 amount)
-        external
-        override
-        returns (uint256)
-    {
-        uint256 mints = _checkMint(amount);
-        for (uint256 i; i < mints; i++) {
+    function mint(address to, uint256 amount) external override {
+        _checkMint(amount);
+        for (uint256 i; i < amount; i++) {
             _mintOne(to);
         }
-        return mints;
     }
 
     /**
@@ -128,7 +128,7 @@ contract EclipseERC721 is
             abi.encodePacked(tokenId, block.number, block.timestamp, to)
         );
         _safeMint(to, tokenId);
-        emit Mint(tokenId, _info.id, to, hash);
+        emit Mint(tokenId, _info.id, to, _msgSender(), hash);
     }
 
     /**

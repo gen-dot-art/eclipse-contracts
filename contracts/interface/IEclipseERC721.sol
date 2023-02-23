@@ -39,7 +39,7 @@ interface IEclipseERC721 is
             uint256
         );
 
-    function mint(address to, uint256 amount) external returns (uint256);
+    function mint(address to, uint256 amount) external ;
 
     function mintOne(address to) external;
 

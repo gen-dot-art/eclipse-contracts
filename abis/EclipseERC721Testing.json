@@ -1,10 +1,5 @@
 [
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -536,6 +531,13 @@
   {
     "inputs": [],
     "name": "mintReserved",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "mintTesting",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

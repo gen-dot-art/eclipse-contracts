@@ -3,23 +3,22 @@
 pragma solidity ^0.8.0;
 import "../access/EclipseAccess.sol";
 import "../interface/IEclipseMinter.sol";
+import "../interface/IEclipseMintGate.sol";
 
 /**
  * @dev Eclipse base minter
  */
 
+struct GateParams {
+    uint8 gateType;
+    bytes gateCalldata;
+}
+
 abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
-    struct MintParams {
-        uint256 startTime;
-        uint256 price;
-    }
-
     address public eclipse;
-    address public mintAllocator;
 
-    constructor(address eclipse_, address mintAllocator_) EclipseAccess() {
+    constructor(address eclipse_) EclipseAccess() {
         eclipse = eclipse_;
-        mintAllocator = mintAllocator_;
     }
 
     /**
@@ -27,12 +26,5 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
      */
     function setEclipse(address eclipse_) external onlyAdmin {
         eclipse = eclipse_;
-    }
-
-    /**
-     * @dev Set the {EclipseMintAllocator} contract address
-     */
-    function setMintAllocator(address mintAllocator_) external onlyAdmin {
-        mintAllocator = mintAllocator_;
     }
 }

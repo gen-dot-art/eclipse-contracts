@@ -53,6 +53,24 @@
       },
       {
         "internalType": "address",
+        "name": "gate",
+        "type": "address"
+      }
+    ],
+    "name": "addGate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "index",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
         "name": "minter",
         "type": "address"
       }
@@ -213,6 +231,25 @@
     "name": "enableMinterForCollection",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "gateTypes",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
