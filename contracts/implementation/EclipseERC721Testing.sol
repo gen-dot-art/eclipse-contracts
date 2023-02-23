@@ -14,6 +14,6 @@ contract EclipseERC721Testing is EclipseERC721 {
      *@dev Function to test token minting
      */
     function mintTesting() external onlyAdmin {
-        _mintOne(msg.sender);
+        _mintOne(_msgSender());
     }
 }
