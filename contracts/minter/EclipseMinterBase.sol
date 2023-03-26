@@ -117,7 +117,9 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
             startTime != 0 && startTime <= timestamp,
             "mint not started yet"
         );
-        require(endTime != 0 && endTime >= timestamp, "mint ended");
+        if (endTime != 0) {
+            require(timestamp <= endTime, "mint ended");
+        }
     }
 
     /**
