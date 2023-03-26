@@ -442,13 +442,15 @@ describe("Eclipse", async function () {
     index = 0,
     maxSupplyMinter = maxSupply,
     pricingMode = [0],
-    getPricingDataFn = [getPricingData]
+    getPricingDataFn = [getPricingData],
+    _startTime,
+    _endTime
   ) {
     const name = "Coll";
     const symbol = "SYM";
     const erc721Index = 0;
-    const startTime = (await time.latest()) + 60 * 60 * 10;
-    const endTime = startTime + 1000 + 2000;
+    const startTime = _startTime ?? (await time.latest()) + 60 * 60 * 10;
+    const endTime = _endTime ?? startTime + 1000 + 2000;
 
     const tx = await eclipse.connect(artistAccount).createCollection({
       name: name,
@@ -656,9 +658,7 @@ describe("Eclipse", async function () {
       await expect(shouldFailMint).to.revertedWith("wrong amount sent");
       await expect(shouldFailMint2).to.revertedWith("wrong amount sent");
     });
-  });
-  describe("MinterFree", async () => {
-    it("should mint free mint collection", async () => {
+    it("should keep minting open for collection", async () => {
       const deployment = await deploy();
       const {
         store,
@@ -667,8 +667,9 @@ describe("Eclipse", async function () {
         factory,
         otherAccount,
         minterFree,
+        minter,
       } = deployment;
-
+      const _startTime = (await time.latest()) + 60;
       const { info, startTime } = await createCollection(
         eclipse,
         store,
@@ -678,11 +679,13 @@ describe("Eclipse", async function () {
         10,
         0,
         5,
-        [2],
-        [getPricingDataFreeMint]
+        [0, 2],
+        [getPricingData, getPricingDataFreeMint],
+        _startTime,
+        0
       );
 
-      await time.increaseTo(startTime + 1);
+      await time.increaseTo(startTime + 10 * 10000);
       const EclipseErc721 = await ethers.getContractFactory("EclipseERC721");
       const collection = await EclipseErc721.attach(
         info.collection.contractAddress
@@ -694,16 +697,77 @@ describe("Eclipse", async function () {
           value: 0,
         }
       );
+      const mint2 = await minter.mintOne(info.collection.contractAddress, 0, {
+        value: ONE_GWEI,
+      });
       await expect(mint).to.emit(collection, "Mint");
-      await minterFree.mint(info.collection.contractAddress, 0, 4, {
+      await expect(mint2).to.emit(collection, "Mint");
+    });
+    it("should respect maxSupply for each minter", async () => {
+      const deployment = await deploy();
+      const {
+        store,
+        eclipse,
+        artistAccount,
+        factory,
+        otherAccount,
+        minterFree,
+        minter,
+      } = deployment;
+      const _startTime = (await time.latest()) + 60;
+      const { info, startTime } = await createCollection(
+        eclipse,
+        store,
+        factory,
+        artistAccount,
+        otherAccount,
+        10,
+        0,
+        5,
+        [0, 2, 2],
+        [getPricingData, getPricingDataFreeMint, getPricingDataFreeMint],
+        _startTime,
+        0
+      );
+
+      await time.increaseTo(startTime + 10 * 10000);
+      const EclipseErc721 = await ethers.getContractFactory("EclipseERC721");
+      const collection = await EclipseErc721.attach(
+        info.collection.contractAddress
+      );
+      const mint = await minterFree.mintOne(
+        info.collection.contractAddress,
+        0,
+        {
+          value: 0,
+        }
+      );
+      await minterFree.mint(info.collection.contractAddress, 0, 3, {
         value: 0,
       });
-      const fail = minterFree.mintOne(info.collection.contractAddress, 0, {
+      const mint2 = await minter.mintOne(info.collection.contractAddress, 0, {
+        value: ONE_GWEI,
+      });
+      await minter.mint(info.collection.contractAddress, 0, 4, {
+        value: BigNumber.from(ONE_GWEI).mul(4),
+      });
+      await expect(mint).to.emit(collection, "Mint");
+      await expect(mint2).to.emit(collection, "Mint");
+
+      const fail1 = minterFree.mint(info.collection.contractAddress, 1, 2, {
         value: 0,
       });
-      await expect(fail).to.revertedWith("sold out");
+      await expect(fail1).to.revertedWith("amount exceeds total supply");
+      await minterFree.mintOne(info.collection.contractAddress, 0, {
+        value: 0,
+      });
+      const fail2 = minterFree.mint(info.collection.contractAddress, 1, 2, {
+        value: 0,
+      });
+      await expect(fail2).to.revertedWith("sold out");
     });
   });
+
   describe("DutchAuction", async () => {
     it("should mint linear DA collection", async () => {
       const deployment = await deploy();
