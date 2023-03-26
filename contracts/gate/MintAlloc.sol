@@ -5,27 +5,25 @@ library MintAlloc {
     struct State {
         uint8 allowedPerTransaction;
         uint24 allowedPerWallet;
-        uint256 minted;
-        mapping(address => uint256) mints;
+        uint24 minted;
+        mapping(address => uint24) mints;
     }
 
-    function getAllowedMints(State storage state, address user)
-        internal
-        view
-        returns (uint256)
-    {
-        uint256 maxMints = getAllowedMintsForUser(state, user);
+    function getAllowedMints(
+        State storage state,
+        address user
+    ) internal view returns (uint24) {
+        uint24 maxMints = getAllowedMintsForUser(state, user);
         return
             maxMints > state.allowedPerTransaction
                 ? state.allowedPerTransaction
                 : maxMints;
     }
 
-    function getAllowedMintsForUser(State storage state, address user)
-        internal
-        view
-        returns (uint256)
-    {
+    function getAllowedMintsForUser(
+        State storage state,
+        address user
+    ) internal view returns (uint24) {
         return state.allowedPerWallet - state.mints[user];
     }
 
@@ -41,7 +39,7 @@ library MintAlloc {
     function update(
         State storage state,
         address user,
-        uint256 amount
+        uint24 amount
     ) internal {
         state.mints[user] += amount;
         state.minted += amount;

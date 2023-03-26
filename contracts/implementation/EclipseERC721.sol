@@ -21,7 +21,7 @@ contract EclipseERC721 is
 {
     struct CollectionInfo {
         uint256 id;
-        uint256 maxSupply;
+        uint24 maxSupply;
         address artist;
     }
 
@@ -66,7 +66,7 @@ contract EclipseERC721 is
         string memory symbol,
         string memory uri,
         uint256 id,
-        uint256 maxSupply,
+        uint24 maxSupply,
         address admin,
         address contractAdmin,
         address artist,
@@ -86,7 +86,7 @@ contract EclipseERC721 is
     /**
      * @dev Helper method to check allowed minters
      */
-    function _checkMint(uint256 amount) internal view {
+    function _checkMint(uint24 amount) internal view {
         require(_minters[_msgSender()], "only minter allowed");
         require(!_paused, "minting paused");
         uint256 totalSupply = totalSupply();
@@ -103,7 +103,7 @@ contract EclipseERC721 is
      * @param to address to mint to
      * @param amount amount of tokens to mint
      */
-    function mint(address to, uint256 amount) external override {
+    function mint(address to, uint24 amount) external override {
         _checkMint(amount);
         for (uint256 i; i < amount; i++) {
             _mintOne(to);
@@ -123,7 +123,7 @@ contract EclipseERC721 is
      * @dev Internal helper method to mint token
      */
     function _mintOne(address to) internal virtual {
-        uint256 tokenId = _info.id * 100_000 + totalSupply() + 1;
+        uint256 tokenId = _info.id * 1_000_000 + totalSupply() + 1;
         bytes32 hash = keccak256(
             abi.encodePacked(tokenId, block.number, block.timestamp, to)
         );
@@ -134,7 +134,9 @@ contract EclipseERC721 is
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         virtual
@@ -149,13 +151,10 @@ contract EclipseERC721 is
     /**
      * @dev Get royalty info see {IERC2981}
      */
-    function royaltyInfo(uint256, uint256 salePrice_)
-        external
-        view
-        virtual
-        override
-        returns (address, uint256)
-    {
+    function royaltyInfo(
+        uint256,
+        uint256 salePrice_
+    ) external view virtual override returns (address, uint256) {
         return (
             _royaltyReceiver,
             ((
@@ -176,12 +175,12 @@ contract EclipseERC721 is
         virtual
         override
         returns (
-            string memory,
-            string memory,
-            address,
-            uint256,
-            uint256,
-            uint256
+            string memory _name,
+            string memory _symbol,
+            address artist,
+            uint256 id,
+            uint24 maxSupply,
+            uint256 _totalSupply
         )
     {
         return (
@@ -197,13 +196,9 @@ contract EclipseERC721 is
     /**
      *@dev Get all tokens owned by an address
      */
-    function getTokensByOwner(address _owner)
-        external
-        view
-        virtual
-        override
-        returns (uint256[] memory)
-    {
+    function getTokensByOwner(
+        address _owner
+    ) external view virtual override returns (uint256[] memory) {
         uint256 tokenCount = balanceOf(_owner);
         uint256[] memory tokenIds = new uint256[](tokenCount);
         for (uint256 i; i < tokenCount; i++) {
@@ -233,10 +228,10 @@ contract EclipseERC721 is
      *@dev Set receiver of royalties and shares
      * NOTE: shares dominator is 10_000
      */
-    function setRoyaltyReceiver(address receiver, uint256 shares)
-        external
-        onlyAdmin
-    {
+    function setRoyaltyReceiver(
+        address receiver,
+        uint256 shares
+    ) external onlyAdmin {
         _royaltyReceiver = receiver;
         _royaltyShares = shares;
         emit RoyaltyReceiverChanged(receiver);
@@ -245,11 +240,10 @@ contract EclipseERC721 is
     /**
      *@dev Set allowed minter contract
      */
-    function setMinter(address minter, bool enable)
-        external
-        override
-        onlyContractAdmin
-    {
+    function setMinter(
+        address minter,
+        bool enable
+    ) external override onlyContractAdmin {
         _minters[minter] = enable;
     }
 

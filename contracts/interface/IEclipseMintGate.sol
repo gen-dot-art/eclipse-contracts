@@ -6,35 +6,42 @@ interface IEclipseMintGate {
     function getAllowedMints(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user
-    ) external view returns (uint256);
+    ) external view returns (uint24);
 
     function update(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user,
-        uint256 amount
+        uint24 amount
     ) external;
 
     function isUserAllowed(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user
     ) external view returns (bool);
+
+    // function getUserMintState(
+    //     address collection,
+    //     address minterContract,
+    //     uint8 index,
+    //     address user
+    // ) external view returns (bool);
 
     function addGateForCollection(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         bytes memory data
     ) external;
 
     function getTotalMinted(
         address collection,
         address minterContract,
-        uint256 index
-    ) external view returns (uint256);
+        uint8 index
+    ) external view returns (uint24);
 }

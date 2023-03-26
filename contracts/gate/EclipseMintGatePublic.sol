@@ -20,7 +20,8 @@ struct PublicGateParams {
 
 contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     using MintAlloc for MintAlloc.State;
-    mapping(address => mapping(address => mapping(uint256 => MintAlloc.State))) gates;
+    mapping(address => mapping(address => mapping(uint256 => MintAlloc.State)))
+        public gates;
 
     /**
      *@dev Initialize mint state for collection
@@ -28,7 +29,7 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     function _addGateForCollection(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         uint24 allowedPerWallet,
         uint8 allowedPerTransaction
     ) internal {
@@ -41,7 +42,7 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     function addGateForCollection(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         bytes memory data
     ) external override onlyAdmin {
         PublicGateParams memory params = abi.decode(data, (PublicGateParams));
@@ -70,9 +71,9 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     function update(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user,
-        uint256 amount
+        uint24 amount
     ) external override onlyAdmin {
         gates[minterContract][collection][index].update(user, amount);
     }
@@ -83,16 +84,16 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     function getAllowedMints(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user
-    ) public view override returns (uint256) {
+    ) public view override returns (uint24) {
         return gates[minterContract][collection][index].getAllowedMints(user);
     }
 
     function isUserAllowed(
         address collection,
         address minterContract,
-        uint256 index,
+        uint8 index,
         address user
     ) external view override returns (bool) {
         return
@@ -102,8 +103,8 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
     function getTotalMinted(
         address collection,
         address minterContract,
-        uint256 index
-    ) external view override returns (uint256) {
+        uint8 index
+    ) external view override returns (uint24) {
         return gates[minterContract][collection][index].minted;
     }
 }

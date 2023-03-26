@@ -15,7 +15,7 @@ struct CollectionParams {
     string symbol;
     string script;
     uint8 collectionType;
-    uint256 maxSupply;
+    uint24 maxSupply;
     address contractAdmin;
     uint8 erc721Index;
     address[] minters;
@@ -29,7 +29,7 @@ struct CollectionEvent {
     string name;
     string symbol;
     string script;
-    uint256 maxSupply;
+    uint24 maxSupply;
     address implementation;
     address paymentSplitter;
 }
@@ -44,7 +44,7 @@ struct InitializerParams {
     address artist;
     string name;
     string symbol;
-    uint256 maxSupply;
+    uint24 maxSupply;
     address contractAdmin;
     address[] minters;
     address paymentSplitter;
@@ -67,29 +67,19 @@ contract EclipseCollectionFactory is EclipseAccess {
         }
         collectionTypes[0] = CollectionType(
             "js",
-            chain * 1_000_000 + 100_000,
+            chain * 1_000_000_000 + 100_000_000,
             0
         );
-        // collectionTypes[1] = CollectionType(
-        //     "ai",
-        //     chain * 1_000_000 + 200_000,
-        //     0
-        // );
-        // collectionTypes[2] = CollectionType(
-        //     "3d",
-        //     chain * 1_000_000 + 300_000,
-        //     0
-        // );
     }
 
     /**
      * @dev Get next collection id
      */
-    function _getNextCollectionId(uint8 collectioType)
-        internal
-        returns (uint256)
-    {
-        CollectionType storage obj = collectionTypes[collectioType];
+    function _getNextCollectionId(
+        uint8 collectionType
+    ) internal returns (uint256) {
+        CollectionType storage obj = collectionTypes[collectionType];
+        require(obj.prefix != 0, "invalid collectionType");
         obj.lastId += 1;
         uint256 id = obj.prefix + obj.lastId;
         return id;
@@ -99,14 +89,12 @@ contract EclipseCollectionFactory is EclipseAccess {
      * @dev Create initializer for clone
      * Note The method signature is created on chain to prevent malicious initialization args
      */
-    function _createInitializer(InitializerParams memory params)
-        internal
-        view
-        returns (bytes memory)
-    {
+    function _createInitializer(
+        InitializerParams memory params
+    ) internal view returns (bytes memory) {
         return
             abi.encodeWithSignature(
-                "initialize(string,string,string,uint256,uint256,address,address,address,address[],address)",
+                "initialize(string,string,string,uint256,uint24,address,address,address,address[],address)",
                 params.name,
                 params.symbol,
                 uri,
@@ -123,21 +111,20 @@ contract EclipseCollectionFactory is EclipseAccess {
     /**
      * @dev Cone an implementation contract
      */
-    function cloneCollectionContract(CollectionParams memory params)
-        external
-        onlyAdmin
-        returns (address, uint256)
-    {
+    function cloneCollectionContract(
+        CollectionParams memory params
+    ) external onlyAdmin returns (address, uint256) {
         address implementation = erc721Implementations[params.erc721Index];
         require(implementation != address(0), "invalid erc721Index");
+        uint24 maxSupply = params.maxSupply;
+        require(maxSupply <= 99_999, "maxSupply must not be greater 99.999");
         uint8 collectionType = params.collectionType;
         uint256 id = _getNextCollectionId(collectionType);
         address paymentSplitter = params.paymentSplitter;
-        address[] memory minters = params.minters;
         address artist = params.artist;
         address contractAdmin = params.contractAdmin;
+        address[] memory minters = params.minters;
         string memory symbol = params.symbol;
-        uint256 maxSupply = params.maxSupply;
         string memory name = params.name;
         string memory script = params.script;
         bytes memory initializer = _createInitializer(
@@ -177,10 +164,10 @@ contract EclipseCollectionFactory is EclipseAccess {
     /**
      * @dev Add an ERC721 implementation contract and map by index
      */
-    function addErc721Implementation(uint8 index, address implementation)
-        external
-        onlyAdmin
-    {
+    function addErc721Implementation(
+        uint8 index,
+        address implementation
+    ) external onlyAdmin {
         erc721Implementations[index] = implementation;
     }
 
@@ -206,11 +193,9 @@ contract EclipseCollectionFactory is EclipseAccess {
     /**
      * @dev Predict contract address for new collection
      */
-    function predictDeterministicAddress(uint8 erc721Index)
-        external
-        view
-        returns (address)
-    {
+    function predictDeterministicAddress(
+        uint8 erc721Index
+    ) external view returns (address) {
         return
             Clones.predictDeterministicAddress(
                 erc721Implementations[erc721Index],

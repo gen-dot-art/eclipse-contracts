@@ -13,7 +13,7 @@ interface IEclipsePaymentSplitter {
 
     function updatePayee(
         uint8 paymentType,
-        uint256 payeeIndex,
+        uint8 payeeIndex,
         address newPayee
     ) external;
 }

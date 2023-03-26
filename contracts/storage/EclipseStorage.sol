@@ -35,11 +35,9 @@ contract EclipseStorage is EclipseAccess {
     /**
      * @dev Helper function to get {PaymentSplitter} of artist
      */
-    function getPaymentSplitterForCollection(address collection)
-        external
-        view
-        returns (address)
-    {
+    function getPaymentSplitterForCollection(
+        address collection
+    ) external view returns (address) {
         return collections[collection].paymentSplitter;
     }
 
@@ -83,22 +81,30 @@ contract EclipseStorage is EclipseAccess {
      * @dev Get collection struct
      * @param collection collection address
      */
-    function getCollection(address collection)
-        external
-        view
-        returns (Collection memory)
-    {
+    function getCollection(
+        address collection
+    ) external view returns (Collection memory) {
         return collections[collection];
+    }
+
+    /**
+     * @dev Get artist of collection
+     * @param collection collection address
+     */
+    function getArtistOfCollection(
+        address collection
+    ) external view returns (address) {
+        return collections[collection].artist;
     }
 
     /**
      * @dev Update payment splitter for collection
      * @param paymentSplitter address of new payment splitter
      */
-    function setPaymentSplitter(address collection, address paymentSplitter)
-        external
-        onlyAdmin
-    {
+    function setPaymentSplitter(
+        address collection,
+        address paymentSplitter
+    ) external onlyAdmin {
         collections[collection].paymentSplitter = paymentSplitter;
     }
 }

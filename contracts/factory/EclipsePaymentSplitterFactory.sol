@@ -11,7 +11,7 @@ import "../access/EclipseAccess.sol";
 contract EclipsePaymentSplitterFactory is EclipseAccess {
     struct Payment {
         address[] payees;
-        uint256[] shares;
+        uint24[] shares;
     }
     address public implementation;
 
@@ -20,8 +20,8 @@ contract EclipsePaymentSplitterFactory is EclipseAccess {
         address artist,
         address[] payeesMint,
         address[] payeesRoyalties,
-        uint256[] sharesMint,
-        uint256[] sharesRoyalties
+        uint24[] sharesMint,
+        uint24[] sharesRoyalties
     );
 
     constructor(address implementation_) EclipseAccess() {
@@ -36,12 +36,12 @@ contract EclipsePaymentSplitterFactory is EclipseAccess {
         address platformPayout,
         address[] memory payeesMint,
         address[] memory payeesRoyalties,
-        uint256[] memory sharesMint,
-        uint256[] memory sharesRoyalties
+        uint24[] memory sharesMint,
+        uint24[] memory sharesRoyalties
     ) internal pure returns (bytes memory) {
         return
             abi.encodeWithSignature(
-                "initialize(address,address,address[],address[],uint256[],uint256[])",
+                "initialize(address,address,address[],address[],uint24[],uint24[])",
                 owner,
                 platformPayout,
                 payeesMint,
@@ -60,8 +60,8 @@ contract EclipsePaymentSplitterFactory is EclipseAccess {
         address artist,
         address[] memory payeesMint,
         address[] memory payeesRoyalties,
-        uint256[] memory sharesMint,
-        uint256[] memory sharesRoyalties
+        uint24[] memory sharesMint,
+        uint24[] memory sharesRoyalties
     ) external onlyAdmin returns (address) {
         bytes memory initializer = _createInitializer(
             owner,

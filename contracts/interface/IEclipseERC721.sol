@@ -14,7 +14,7 @@ interface IEclipseERC721 is
         string memory symbol,
         string memory uri,
         uint256 id,
-        uint256 maxSupply,
+        uint24 maxSupply,
         address admin,
         address contractAdmin,
         address artist,
@@ -22,24 +22,23 @@ interface IEclipseERC721 is
         address paymentSplitter
     ) external;
 
-    function getTokensByOwner(address _owner)
-        external
-        view
-        returns (uint256[] memory);
+    function getTokensByOwner(
+        address _owner
+    ) external view returns (uint256[] memory);
 
     function getInfo()
         external
         view
         returns (
-            string memory,
-            string memory,
-            address,
-            uint256,
-            uint256,
-            uint256
+            string memory name,
+            string memory symbol,
+            address artist,
+            uint256 id,
+            uint24 maxSupply,
+            uint256 totalSupply
         );
 
-    function mint(address to, uint256 amount) external ;
+    function mint(address to, uint24 amount) external;
 
     function mintOne(address to) external;
 

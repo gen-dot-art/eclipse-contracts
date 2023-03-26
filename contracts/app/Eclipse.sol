@@ -14,19 +14,18 @@ import "../storage/EclipseStorage.sol";
  */
 
 struct CreateCollectionParams {
-    address artist;
     string name;
     string symbol;
     string script;
     uint8 collectionType;
-    uint256 maxSupply;
+    uint24 maxSupply;
     uint8 erc721Index;
     uint8[] pricingMode;
     bytes[] pricingData;
     address[] payeesMint;
     address[] payeesRoyalties;
-    uint256[] sharesMint;
-    uint256[] sharesRoyalties;
+    uint24[] sharesMint;
+    uint24[] sharesRoyalties;
 }
 struct PricingParams {
     uint8 mode;
@@ -76,10 +75,9 @@ contract Eclipse is EclipseAccess {
     /**
      * @dev Internal functtion to close the ERC721 implementation contract
      */
-    function _cloneCollection(CollectionParams memory params)
-        internal
-        returns (address instance, uint256 id)
-    {
+    function _cloneCollection(
+        CollectionParams memory params
+    ) internal returns (address instance, uint256 id) {
         return
             EclipseCollectionFactory(collectionFactory).cloneCollectionContract(
                 params
@@ -89,10 +87,9 @@ contract Eclipse is EclipseAccess {
     /**
      * @dev Internal functtion to create the collection and risgister to minter
      */
-    function _createCollection(CollectionParams memory params)
-        internal
-        returns (address instance, uint256 id)
-    {
+    function _createCollection(
+        CollectionParams memory params
+    ) internal returns (address instance, uint256 id) {
         (instance, id) = _cloneCollection(params);
         store.setCollection(
             Collection(
@@ -109,7 +106,6 @@ contract Eclipse is EclipseAccess {
     /**
      * @dev Clones an ERC721 implementation contract
      * @param params params
-     * @dev artist address of artist
      * @dev name name of collection
      * @dev symbol ERC721 symbol for collection
      * @dev script single html as string
@@ -124,7 +120,7 @@ contract Eclipse is EclipseAccess {
      * Note payee and shares indices must be in respective order
      */
     function createCollection(CreateCollectionParams calldata params) external {
-        address artist = params.artist;
+        address artist = _msgSender();
         _createArtist(artist);
         address paymentSplitter = EclipsePaymentSplitterFactory(
             paymentSplitterFactory
@@ -145,7 +141,7 @@ contract Eclipse is EclipseAccess {
         for (uint8 i; i < pricingMode.length; i++) {
             address minter = minters[pricingMode[i]];
             collectionMinters[i] = minter;
-            _addMinterToCollection(instance, minter, pricingData[i]);
+            _addMinterToCollection(instance, artist, minter, pricingData[i]);
         }
         _createCollection(
             CollectionParams(
@@ -178,10 +174,11 @@ contract Eclipse is EclipseAccess {
      */
     function _addMinterToCollection(
         address collection,
+        address sender,
         address minter,
         bytes memory pricingData
     ) internal {
-        IEclipseMinter(minter).setPricing(collection, pricingData);
+        IEclipseMinter(minter).setPricing(collection, sender, pricingData);
     }
 
     /**
@@ -209,7 +206,12 @@ contract Eclipse is EclipseAccess {
     ) external onlyArtist(collection) {
         address minter = minters[pricingMode];
         if (enable) {
-            _addMinterToCollection(collection, minter, pricingData);
+            _addMinterToCollection(
+                collection,
+                _msgSender(),
+                minter,
+                pricingData
+            );
         }
         IEclipseERC721(collection).setMinter(minter, enable);
     }
@@ -232,11 +234,9 @@ contract Eclipse is EclipseAccess {
      * @dev Get collection info
      * @param collection contract address of the collection
      */
-    function getCollectionInfo(address collection)
-        external
-        view
-        returns (CollectionInfo memory info)
-    {
+    function getCollectionInfo(
+        address collection
+    ) external view returns (CollectionInfo memory info) {
         (
             string memory name,
             string memory symbol,

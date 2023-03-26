@@ -13,19 +13,19 @@ contract EclipsePaymentSplitter is
 {
     struct Payment {
         address[] payees;
-        uint256[] shares;
+        uint24[] shares;
     }
 
-    uint256 public DOMINATOR;
-    uint256 public platformShare;
-    uint256 public platformShareRoyalties;
+    uint16 public DOMINATOR;
+    uint16 public platformShare;
+    uint16 public platformShareRoyalties;
     address public _platformPayout;
 
     mapping(address => uint256) public _ethBalances;
     Payment private _payment;
     Payment private _paymentRoyalties;
 
-    event IncomingPayment(uint256 paymentType, address payee, uint256 amount);
+    event IncomingPayment(uint8 paymentType, address payee, uint256 amount);
 
     constructor() {
         _disableInitializers();
@@ -36,20 +36,17 @@ contract EclipsePaymentSplitter is
         address platformPayout,
         address[] memory payeesMint,
         address[] memory payeesRoyalties,
-        uint256[] memory sharesMint,
-        uint256[] memory sharesRoyalties
+        uint24[] memory sharesMint,
+        uint24[] memory sharesRoyalties
     ) public initializer {
         __EclipseAccessUpgradable_init(owner, owner, owner);
+        DOMINATOR = 10_000;
         _checkShares(payeesMint, payeesRoyalties, sharesMint, sharesRoyalties);
         _platformPayout = platformPayout;
-        DOMINATOR = 10_000;
         platformShare = 1250;
         platformShareRoyalties = 200;
-        _payment = Payment(payeesMint, formatShares(sharesMint));
-        _paymentRoyalties = Payment(
-            payeesRoyalties,
-            formatShares(sharesRoyalties)
-        );
+        _payment = Payment(payeesMint, sharesMint);
+        _paymentRoyalties = Payment(payeesRoyalties, sharesRoyalties);
     }
 
     function splitPayment() external payable override {
@@ -86,9 +83,10 @@ contract EclipsePaymentSplitter is
         _splitPaymentRoyaltyArtist(msg.value, totalShares);
     }
 
-    function _splitPaymentRoyaltyArtist(uint256 value, uint256 totalShares)
-        internal
-    {
+    function _splitPaymentRoyaltyArtist(
+        uint256 value,
+        uint256 totalShares
+    ) internal {
         for (uint8 i; i < _paymentRoyalties.payees.length; i++) {
             address payee = _paymentRoyalties.payees[i];
             uint256 ethAmount = (value * _paymentRoyalties.shares[i]) /
@@ -155,7 +153,7 @@ contract EclipsePaymentSplitter is
 
     function updatePayee(
         uint8 paymentType,
-        uint256 payeeIndex,
+        uint8 payeeIndex,
         address newPayee
     ) external override {
         Payment storage payment = paymentType == 0
@@ -169,31 +167,20 @@ contract EclipsePaymentSplitter is
     function _checkShares(
         address[] memory payeesMint,
         address[] memory payeesRoyalties,
-        uint256[] memory sharesMint,
-        uint256[] memory sharesRoyalties
-    ) internal pure {
+        uint24[] memory sharesMint,
+        uint24[] memory sharesRoyalties
+    ) internal view {
+        uint8 mintSharesCount = uint8(sharesMint.length);
         require(
-            payeesMint.length == sharesMint.length &&
+            payeesMint.length == mintSharesCount &&
                 payeesRoyalties.length == sharesRoyalties.length,
             "shares and payees must have same amount of entries"
         );
-    }
-
-    function formatShares(uint256[] memory shares)
-        internal
-        view
-        returns (uint256[] memory)
-    {
-        uint256 sumShares;
-        uint256 sharesCount = shares.length;
-        for (uint256 i = 0; i < sharesCount; i++) {
-            sumShares += shares[i];
+        uint24 sumShares;
+        for (uint24 i = 0; i < mintSharesCount; i++) {
+            sumShares += sharesMint[i];
         }
-        for (uint256 i = 0; i < sharesCount; i++) {
-            shares[i] = (shares[i] * DOMINATOR) / sumShares;
-        }
-
-        return shares;
+        require(sumShares == DOMINATOR, "sum of shares must equal DOMINATOR");
     }
 
     function getShares() public view returns (Payment memory) {
