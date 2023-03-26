@@ -1,3 +1,5 @@
+const { BigNumber } = require("ethers");
+
 require("dotenv").config();
 require("@nomiclabs/hardhat-truffle5");
 require("@nomiclabs/hardhat-etherscan");
@@ -25,6 +27,7 @@ module.exports = {
   networks: {
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
+      gasPrice: BigNumber.from(10).pow(9).mul(2).toNumber(),
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
