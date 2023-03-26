@@ -18,6 +18,12 @@ describe("Eclipse", async function () {
     const EclipseMinterFixedPrice = await ethers.getContractFactory(
       "EclipseMinterFixedPrice"
     );
+    const EclipseMinterFree = await ethers.getContractFactory(
+      "EclipseMinterFree"
+    );
+    const EclipseMinterAirdrop = await ethers.getContractFactory(
+      "EclipseMinterAirdrop"
+    );
     const EclipseMinterDutchAuction = await ethers.getContractFactory(
       "EclipseMinterDutchAuction"
     );
@@ -62,22 +68,32 @@ describe("Eclipse", async function () {
 
     const minter = await EclipseMinterFixedPrice.deploy(eclipse.address);
     const minterDA = await EclipseMinterDutchAuction.deploy(eclipse.address);
+    const minterFree = await EclipseMinterFree.deploy(eclipse.address);
+    const minterAirdrop = await EclipseMinterAirdrop.deploy(eclipse.address);
 
     const implementation = await EclipseERC721.deploy();
 
     await eclipse.addMinter(0, minter.address);
     await eclipse.addMinter(1, minterDA.address);
+    await eclipse.addMinter(2, minterFree.address);
+    await eclipse.addMinter(3, minterAirdrop.address);
     await eclipse.addGate(0, mintGatePublic.address);
     await eclipse.addGate(1, mintGateErc721.address);
     await collectionFactory.addErc721Implementation(0, implementation.address);
     await collectionFactory.setAdminAccess(eclipse.address, true);
     await mintGatePublic.setAdminAccess(minter.address, true);
     await mintGatePublic.setAdminAccess(minterDA.address, true);
+    await mintGatePublic.setAdminAccess(minterFree.address, true);
+    await mintGatePublic.setAdminAccess(minterAirdrop.address, true);
     await mintGateErc721.setAdminAccess(minter.address, true);
     await mintGateErc721.setAdminAccess(minterDA.address, true);
+    await mintGateErc721.setAdminAccess(minterFree.address, true);
+    await mintGateErc721.setAdminAccess(minterAirdrop.address, true);
     await paymentSplitterFactory.setAdminAccess(eclipse.address, true);
     await minter.setAdminAccess(eclipse.address, true);
     await minterDA.setAdminAccess(eclipse.address, true);
+    await minterFree.setAdminAccess(eclipse.address, true);
+    await minterAirdrop.setAdminAccess(eclipse.address, true);
     await store.setAdminAccess(eclipse.address, true);
 
     return {
@@ -88,6 +104,8 @@ describe("Eclipse", async function () {
       implementation,
       minter,
       minterDA,
+      minterFree,
+      minterAirdrop,
       mintGatePublic,
       mintGateErc721,
       owner,
@@ -182,6 +200,99 @@ describe("Eclipse", async function () {
           startTime,
           endTime,
           price: ONE_GWEI,
+          maxSupply: maxSupplyMinter,
+          gate: {
+            gateType: 0,
+            gateCalldata,
+          },
+        },
+      ]
+    );
+  }
+  function getPricingDataFreeMint(
+    artistAccount,
+    maxSupplyMinter,
+    startTime,
+    endTime
+  ) {
+    const gateCalldata = ethers.utils.defaultAbiCoder.encode(
+      [
+        {
+          components: [
+            {
+              internalType: "uint24",
+              name: "allowedPerWallet",
+              type: "uint24",
+            },
+            {
+              internalType: "uint8",
+              name: "allowedPerTransaction",
+              type: "uint8",
+            },
+          ],
+          name: "params",
+          type: "tuple",
+        },
+      ],
+      [
+        {
+          allowedPerWallet: 0,
+          allowedPerTransaction: 0,
+        },
+      ]
+    );
+    return ethers.utils.defaultAbiCoder.encode(
+      [
+        {
+          components: [
+            {
+              internalType: "address",
+              name: "artist",
+              type: "address",
+            },
+            {
+              internalType: "uint48",
+              name: "startTime",
+              type: "uint48",
+            },
+            {
+              internalType: "uint48",
+              name: "endTime",
+              type: "uint48",
+            },
+            {
+              internalType: "uint24",
+              name: "maxSupply",
+              type: "uint24",
+            },
+            {
+              components: [
+                {
+                  internalType: "uint8",
+                  name: "gateType",
+                  type: "uint8",
+                },
+                {
+                  internalType: "bytes",
+                  name: "gateCalldata",
+                  type: "bytes",
+                },
+              ],
+              name: "gate",
+              type: "tuple",
+              internalType: "GateParams",
+            },
+          ],
+          name: "params",
+          type: "tuple",
+          internalType: "FixedPriceParams",
+        },
+      ],
+      [
+        {
+          artist: artistAccount.address,
+          startTime,
+          endTime,
           maxSupply: maxSupplyMinter,
           gate: {
             gateType: 0,
@@ -544,6 +655,53 @@ describe("Eclipse", async function () {
 
       await expect(shouldFailMint).to.revertedWith("wrong amount sent");
       await expect(shouldFailMint2).to.revertedWith("wrong amount sent");
+    });
+  });
+  describe("MinterFree", async () => {
+    it("should mint free mint collection", async () => {
+      const deployment = await deploy();
+      const {
+        store,
+        eclipse,
+        artistAccount,
+        factory,
+        otherAccount,
+        minterFree,
+      } = deployment;
+
+      const { info, startTime } = await createCollection(
+        eclipse,
+        store,
+        factory,
+        artistAccount,
+        otherAccount,
+        10,
+        0,
+        5,
+        [2],
+        [getPricingDataFreeMint]
+      );
+
+      await time.increaseTo(startTime + 1);
+      const EclipseErc721 = await ethers.getContractFactory("EclipseERC721");
+      const collection = await EclipseErc721.attach(
+        info.collection.contractAddress
+      );
+      const mint = await minterFree.mintOne(
+        info.collection.contractAddress,
+        0,
+        {
+          value: 0,
+        }
+      );
+      await expect(mint).to.emit(collection, "Mint");
+      await minterFree.mint(info.collection.contractAddress, 0, 4, {
+        value: 0,
+      });
+      const fail = minterFree.mintOne(info.collection.contractAddress, 0, {
+        value: 0,
+      });
+      await expect(fail).to.revertedWith("sold out");
     });
   });
   describe("DutchAuction", async () => {
