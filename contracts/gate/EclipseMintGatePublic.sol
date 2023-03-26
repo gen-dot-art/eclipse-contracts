@@ -102,7 +102,11 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
         MintAlloc.State storage mintAlloc = gates[minterContract][collection][
             index
         ];
-        return UserMint(mintAlloc.getAllowedMints(user), mintAlloc.minted);
+        return
+            UserMint(
+                mintAlloc.getAvailableMintsForUser(user),
+                mintAlloc.mints[user]
+            );
     }
 
     function isUserAllowed(
@@ -112,7 +116,9 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
         address user
     ) external view override returns (bool) {
         return
-            gates[minterContract][collection][index].getAllowedMints(user) > 0;
+            gates[minterContract][collection][index].getAvailableMintsForUser(
+                user
+            ) > 0;
     }
 
     function getTotalMinted(

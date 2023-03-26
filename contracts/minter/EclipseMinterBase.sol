@@ -63,18 +63,7 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
     ) external view override returns (UserMint memory) {
         address gateAddress = collections[collection][index].gateAddress;
         IEclipseMintGate gate = IEclipseMintGate(gateAddress);
-        uint24 minted = gate.getTotalMinted(collection, address(this), index);
-        uint24 mints = gate.getAllowedMints(
-            collection,
-            address(this),
-            index,
-            user
-        );
-        uint24 availableSupply = collections[collection][index].maxSupply -
-            minted;
-
-        return
-            UserMint(mints > availableSupply ? availableSupply : mints, minted);
+        return gate.getUserMint(collection, address(this), index, user);
     }
 
     function getAvailableSupply(

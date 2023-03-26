@@ -13,14 +13,14 @@ library MintAlloc {
         State storage state,
         address user
     ) internal view returns (uint24) {
-        uint24 maxMints = getAllowedMintsForUser(state, user);
+        uint24 maxMints = getAvailableMintsForUser(state, user);
         return
             maxMints > state.allowedPerTransaction
                 ? state.allowedPerTransaction
                 : maxMints;
     }
 
-    function getAllowedMintsForUser(
+    function getAvailableMintsForUser(
         State storage state,
         address user
     ) internal view returns (uint24) {

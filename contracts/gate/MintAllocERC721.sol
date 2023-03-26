@@ -29,22 +29,24 @@ library MintAllocERC721 {
     function getAllowedMints(
         State storage state,
         address user
-    ) internal view returns (uint24) {
-        return getAllowedMintsForUser(state, user);
+    ) internal view returns (uint24 available, uint24 minted) {
+        return getAvailableMintsForUser(state, user);
     }
 
-    function getAllowedMintsForUser(
+    function getAvailableMintsForUser(
         State storage state,
         address user
-    ) internal view returns (uint24 available) {
+    ) internal view returns (uint24 available, uint24 minted) {
         uint256 balance = IERC721(state.erc721).balanceOf(user);
-        if (balance < state.minTokensOwned) return available;
+        if (balance < state.minTokensOwned) return (available, minted);
         for (uint256 i; i < balance; i++) {
             uint256 id = IERC721Enumerable(state.erc721).tokenOfOwnerByIndex(
                 user,
                 i
             );
-            available += state.allowedPerTokenOwned - state.mints[id];
+            uint24 mintedForId = state.mints[id];
+            available += state.allowedPerTokenOwned - mintedForId;
+            minted += mintedForId;
         }
     }
 

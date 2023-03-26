@@ -56,8 +56,9 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         uint8 index,
         address user
     ) external view override returns (bool) {
-        return
-            gates[minterContract][collection][index].getAllowedMints(user) > 0;
+        (uint24 available, ) = gates[minterContract][collection][index]
+            .getAvailableMintsForUser(user);
+        return available > 0;
     }
 
     function getTotalMinted(
@@ -77,7 +78,9 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         uint8 index,
         address user
     ) public view override returns (uint24) {
-        return gates[minterContract][collection][index].getAllowedMints(user);
+        (uint24 available, ) = gates[minterContract][collection][index]
+            .getAllowedMints(user);
+        return available;
     }
 
     /**
@@ -92,7 +95,10 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         MintAllocERC721.State storage mintAlloc = gates[minterContract][
             collection
         ][index];
-        return UserMint(mintAlloc.getAllowedMints(user), mintAlloc.minted);
+        (uint24 available, uint24 minted) = mintAlloc.getAvailableMintsForUser(
+            user
+        );
+        return UserMint(available, minted);
     }
 
     function update(
