@@ -20,7 +20,7 @@ Allows admin to clone ERC721 implementations and assign a minter to it. An arbit
 
 Minters are the only signers how are allowed to mint tokens on cloned ERC721 contracts. They handle permission checking, updating the mint allocation state and can provide various mint mechanics. A collection may be assigned to multiple minters.
 
-### EclipseMinter
+### EclipseMinterFixedPrice
 
 Contract that allows members to mint tokens by a fixed price from cloned ERC721 contracts.
 
@@ -32,11 +32,15 @@ Allows admin to create clone contracts via `EclipseCollectionFactory` and `Eclip
 
 | Name                          | mainnet | goerli                                                                                                                       |
 | ----------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Eclipse                       | [-]()   | [0x963F27FBc71B453d883BE0978742a03f469b4dad](https://goerli.etherscan.io/address/0x963F27FBc71B453d883BE0978742a03f469b4dad) |
+| Eclipse                       | [-]()   | [0xd69559Cd515Be1797Cd79883B4Dc435B8fc06bfb](https://goerli.etherscan.io/address/0xd69559Cd515Be1797Cd79883B4Dc435B8fc06bfb) |
 | EclipseStorage                | [-]()   | [0x31f9B928983373eA18696421046e36dC666d16e5](https://goerli.etherscan.io/address/0x31f9B928983373eA18696421046e36dC666d16e5) |
 | EclipseCollectionFactory      | [-]()   | [0xa567567C3f0dbBab756853dBE97203082B9b4eab](https://goerli.etherscan.io/address/0xa567567C3f0dbBab756853dBE97203082B9b4eab) |
-| EclipsePaymentSplitterFactory | [-]()   | [0x1607858335b393C82c1A751DD0f1D1e0f707dC8c](https://goerli.etherscan.io/address/0x1607858335b393C82c1A751DD0f1D1e0f707dC8c) |
-| EclipseERC721                 | [-]()   | [0x462EA76f7ae1c3D3CA59389747443267e9D206A5](https://goerli.etherscan.io/address/0x462EA76f7ae1c3D3CA59389747443267e9D206A5) |
-| EclipsePaymentSplitter        | [-]()   | [0x4538FA3C2dc6253AAe286c613DfF18280D454Faa](https://goerli.etherscan.io/address/0x4538FA3C2dc6253AAe286c613DfF18280D454Faa) |
-| EclipseMintGatePublic         | [-]()   | [0xCF12A14A49DfAF0c1BF7C0bca57bDd806Af459E2](https://goerli.etherscan.io/address/0xCF12A14A49DfAF0c1BF7C0bca57bDd806Af459E2) |
-| EclipseMinter                 | [-]()   | [0x71eee101A00b6515fd888B1Fe9aD334873f910A7](https://goerli.etherscan.io/address/0x71eee101A00b6515fd888B1Fe9aD334873f910A7) |
+| EclipsePaymentSplitterFactory | [-]()   | [0x37b89b6404F2C77Ed802BA63452Ebdf4e8D5703A](https://goerli.etherscan.io/address/0x37b89b6404F2C77Ed802BA63452Ebdf4e8D5703A) |
+| EclipseERC721                 | [-]()   | [0xae9C542a1AfbEa57f9A33170244E3b44d495a335](https://goerli.etherscan.io/address/0xae9C542a1AfbEa57f9A33170244E3b44d495a335) |
+| EclipsePaymentSplitter        | [-]()   | [0x99b279583029e51B32ABe72bCc5f374B31440995](https://goerli.etherscan.io/address/0x99b279583029e51B32ABe72bCc5f374B31440995) |
+| EclipseMintGatePublic         | [-]()   | [0x0CFF430025A03D148574d64781D1fa11525DBEE1](https://goerli.etherscan.io/address/0x0CFF430025A03D148574d64781D1fa11525DBEE1) |
+| EclipseMintGateERC721         | [-]()   | [0x8aA4F14461Efea4e12631e3eB618A583839b7C87](https://goerli.etherscan.io/address/0x8aA4F14461Efea4e12631e3eB618A583839b7C87) |
+| EclipseMinterFixedPrice       | [-]()   | [0x62Fb59F357180884958CC5aA3A11DE0C0c21dBf1](https://goerli.etherscan.io/address/0x62Fb59F357180884958CC5aA3A11DE0C0c21dBf1) |
+| EclipseMinterDutchAuction     | [-]()   | [0x59ebA181164412F4c97B7ea77Cef3d12D3Ac28f9](https://goerli.etherscan.io/address/0x59ebA181164412F4c97B7ea77Cef3d12D3Ac28f9) |
+| EclipseMinterFree             | [-]()   | [0x7C8cd067fDb8167CF3a14a8df34bb135D2BA1DA8](https://goerli.etherscan.io/address/0x7C8cd067fDb8167CF3a14a8df34bb135D2BA1DA8) |
+| EclipseMinterAirdrop          | [-]()   | [0x71417909671459C5680E4fB04Ab6b3ba7EFf1b55](https://goerli.etherscan.io/address/0x71417909671459C5680E4fB04Ab6b3ba7EFf1b55) |
