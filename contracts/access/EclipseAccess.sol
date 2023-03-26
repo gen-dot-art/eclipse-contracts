@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @dev This implements access control for owner and admins
@@ -42,10 +42,10 @@ abstract contract EclipseAccess is Ownable {
         eclipseAdmin = admin;
     }
 
-    function setAdminAccess(address admin, bool access)
-        public
-        onlyEclipseAdmin
-    {
+    function setAdminAccess(
+        address admin,
+        bool access
+    ) public onlyEclipseAdmin {
         admins[admin] = access;
     }
 }

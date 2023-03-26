@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/interfaces/IERC20.sol";
-import "../access/EclipseAccessUpgradable.sol";
-import "../interface/IEclipsePaymentSplitter.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import {EclipseAccessUpgradable} from "../access/EclipseAccessUpgradable.sol";
+import {IEclipsePaymentSplitter} from "../interface/IEclipsePaymentSplitter.sol";
 
 contract EclipsePaymentSplitter is
     Initializable,

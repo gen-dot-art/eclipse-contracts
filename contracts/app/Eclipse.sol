@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "../access/EclipseAccess.sol";
-import "../factory/EclipseCollectionFactory.sol";
-import "../factory/EclipsePaymentSplitterFactory.sol";
-import "../interface/IEclipseERC721.sol";
-import "../interface/IEclipseMinter.sol";
-import "../storage/EclipseStorage.sol";
+import {EclipseAccess} from "../access/EclipseAccess.sol";
+import {EclipseCollectionFactory, CollectionParams} from "../factory/EclipseCollectionFactory.sol";
+import {EclipsePaymentSplitterFactory} from "../factory/EclipsePaymentSplitterFactory.sol";
+import {IEclipseERC721} from "../interface/IEclipseERC721.sol";
+import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
+import {EclipseStorage, Collection, Artist} from "../storage/EclipseStorage.sol";
 
 /**
  * @dev Eclipse

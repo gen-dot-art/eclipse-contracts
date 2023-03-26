@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {ERC20PresetFixedSupply} from "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetFixedSupply.sol";
-import "../access/EclipseAccess.sol";
+import {EclipseAccess} from "../access/EclipseAccess.sol";
 
 contract MockERC20 is ERC20PresetFixedSupply, EclipseAccess {
     constructor(address owner_)

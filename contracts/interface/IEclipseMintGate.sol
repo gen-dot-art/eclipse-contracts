@@ -25,13 +25,6 @@ interface IEclipseMintGate {
         address user
     ) external view returns (bool);
 
-    // function getUserMintState(
-    //     address collection,
-    //     address minterContract,
-    //     uint8 index,
-    //     address user
-    // ) external view returns (bool);
-
     function addGateForCollection(
         address collection,
         address minterContract,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "./EclipseERC721.sol";
+import {EclipseERC721} from "./EclipseERC721.sol";
 
 /**
  * @dev Eclipse ERC721 V4 for Testing

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
-import "@openzeppelin/contracts/interfaces/IERC20.sol";
-import "../access/EclipseAccessUpgradable.sol";
-import "../interface/IEclipsePaymentSplitter.sol";
-import "../interface/IEclipseERC721.sol";
+import {ERC721EnumerableUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
+import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import {EclipseAccessUpgradable} from "../access/EclipseAccessUpgradable.sol";
+import {IEclipsePaymentSplitter} from "../interface/IEclipsePaymentSplitter.sol";
+import {IEclipseERC721} from "../interface/IEclipseERC721.sol";
 
 /**
  * @dev Eclipse ERC721 V4

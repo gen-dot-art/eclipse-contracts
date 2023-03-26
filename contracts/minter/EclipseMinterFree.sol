@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "../app/Eclipse.sol";
-import "../interface/IEclipseERC721.sol";
-import "../interface/IEclipseMintGate.sol";
-import "../interface/IEclipsePaymentSplitter.sol";
-import "./EclipseMinterBase.sol";
+import {Eclipse} from "../app/Eclipse.sol";
+import {IEclipseERC721} from "../interface/IEclipseERC721.sol";
+import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
+import {IEclipsePaymentSplitter} from "../interface/IEclipsePaymentSplitter.sol";
+import {EclipseMinterBase, GateParams} from "./EclipseMinterBase.sol";
 
 /**
  * @dev Eclipse Free Minter

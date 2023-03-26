@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "../access/EclipseAccess.sol";
-import "../app/Eclipse.sol";
-import "../interface/IEclipseMinter.sol";
-import "../interface/IEclipseMintGate.sol";
+import {EclipseAccess} from "../access/EclipseAccess.sol";
+import {Eclipse} from "../app/Eclipse.sol";
+import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
+import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
 
 /**
  * @dev Eclipse base minter

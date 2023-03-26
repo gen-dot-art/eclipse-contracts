@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "@openzeppelin/contracts/proxy/Clones.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "../access/EclipseAccess.sol";
-import "../interface/IEclipseMinter.sol";
+import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {EclipseAccess} from "../access/EclipseAccess.sol";
+import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
 
 /**
  * Eclipse ERC721 contract factory

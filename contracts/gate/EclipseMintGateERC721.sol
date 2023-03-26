@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-import "../access/EclipseAccess.sol";
-import "../interface/IEclipseMinter.sol";
-import "../interface/IEclipseMintGate.sol";
-import "./MintAllocERC721.sol";
-import "@openzeppelin/contracts/interfaces/IERC721.sol";
+import {EclipseAccess} from "../access/EclipseAccess.sol";
+import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
+import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
+import {MintAllocERC721} from "./MintAllocERC721.sol";
+import {IERC721} from "@openzeppelin/contracts/interfaces/IERC721.sol";
 
 /**
  * @dev Eclipse base minter
@@ -88,5 +88,30 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         uint24 amount
     ) external override {
         gates[minterContract][collection][index].update(user, amount);
+    }
+
+    function getGateConfig(
+        address collection,
+        address minterContract,
+        uint8 index
+    )
+        external
+        view
+        returns (
+            uint8 minTokensOwned,
+            uint8 allowedPerTokenOwned,
+            uint24 minted,
+            address erc721
+        )
+    {
+        MintAllocERC721.State storage mintAlloc = gates[minterContract][
+            collection
+        ][index];
+        return (
+            mintAlloc.minTokensOwned,
+            mintAlloc.allowedPerTokenOwned,
+            mintAlloc.minted,
+            mintAlloc.erc721
+        );
     }
 }
