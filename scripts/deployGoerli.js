@@ -9,10 +9,21 @@ async function main() {
   // Contracts are deployed using the first signer/account by default
   const [owner] = await ethers.getSigners();
   const URI = "https://test-api.eclipse.art/search/metadata/";
-  const EclipseMinter = await ethers.getContractFactory("EclipseMinter");
+  const EclipseMinterFixedPrice = await ethers.getContractFactory(
+    "EclipseMinterFixedPrice"
+  );
+  const EclipseMinterDutchAuction = await ethers.getContractFactory(
+    "EclipseMinterDutchAuction"
+  );
+  const EclipseMinterFree = await ethers.getContractFactory(
+    "EclipseMinterFree"
+  );
+  const EclipseMinterAirdrop = await ethers.getContractFactory(
+    "EclipseMinterAirdrop"
+  );
 
   // const EclipseProxy = await ethers.getContractFactory('EclipseProxy');
-  const EclipseERC721 = await ethers.getContractFactory("EclipseERC721Testing");
+  const EclipseERC721 = await ethers.getContractFactory("EclipseERC721");
   const EclipsePaymentSplitterFactory = await ethers.getContractFactory(
     "EclipsePaymentSplitterFactory"
   );
@@ -24,6 +35,9 @@ async function main() {
   );
   const EclipseMintGatePublic = await ethers.getContractFactory(
     "EclipseMintGatePublic"
+  );
+  const EclipseMintGateERC721 = await ethers.getContractFactory(
+    "EclipseMintGateERC721"
   );
   const Eclipse = await ethers.getContractFactory("Eclipse");
 
@@ -68,6 +82,13 @@ async function main() {
   );
   await mintGatePublic.deployed();
 
+  const mintGateErc721 = await EclipseMintGateERC721.deploy();
+  console.log(
+    "yarn hardhat verify --network goerli",
+    [mintGateErc721.address].concat([].map((a) => `"${a}"`)).join(" ")
+  );
+  await mintGateErc721.deployed();
+
   const eclipseArgs = [
     collectionFactory.address,
     paymentSplitterFactory.address,
@@ -81,12 +102,35 @@ async function main() {
   );
   await eclipse.deployed();
 
-  const minter = await EclipseMinter.deploy(eclipse.address);
+  const minterArgs = [eclipse.address];
+
+  const minter = await EclipseMinterFixedPrice.deploy(...minterArgs);
   console.log(
     "yarn hardhat verify --network goerli",
-    [minter.address].concat([eclipse.address].map((a) => `"${a}"`)).join(" ")
+    [minter.address].concat(minterArgs.map((a) => `"${a}"`)).join(" ")
   );
   await minter.deployed();
+
+  const minterFree = await EclipseMinterFree.deploy(...minterArgs);
+  console.log(
+    "yarn hardhat verify --network goerli",
+    [minterFree.address].concat(minterArgs.map((a) => `"${a}"`)).join(" ")
+  );
+  await minterFree.deployed();
+
+  const minterAirdrop = await EclipseMinterAirdrop.deploy(...minterArgs);
+  console.log(
+    "yarn hardhat verify --network goerli",
+    [minterAirdrop.address].concat(minterArgs.map((a) => `"${a}"`)).join(" ")
+  );
+  await minterAirdrop.deployed();
+
+  const minterDA = await EclipseMinterDutchAuction.deploy(...minterArgs);
+  console.log(
+    "yarn hardhat verify --network goerli",
+    [minterDA.address].concat(minterArgs.map((a) => `"${a}"`)).join(" ")
+  );
+  await minterDA.deployed();
 
   const implementation = await EclipseERC721.deploy();
   console.log(
@@ -96,13 +140,26 @@ async function main() {
   await implementation.deployed();
 
   await eclipse.addMinter(0, minter.address);
+  await eclipse.addMinter(1, minterDA.address);
+  await eclipse.addMinter(2, minterFree.address);
+  await eclipse.addMinter(3, minterAirdrop.address);
   await eclipse.addGate(0, mintGatePublic.address);
-
+  await eclipse.addGate(1, mintGateErc721.address);
   await collectionFactory.addErc721Implementation(0, implementation.address);
   await collectionFactory.setAdminAccess(eclipse.address, true);
   await mintGatePublic.setAdminAccess(minter.address, true);
+  await mintGatePublic.setAdminAccess(minterDA.address, true);
+  await mintGatePublic.setAdminAccess(minterFree.address, true);
+  await mintGatePublic.setAdminAccess(minterAirdrop.address, true);
+  await mintGateErc721.setAdminAccess(minter.address, true);
+  await mintGateErc721.setAdminAccess(minterDA.address, true);
+  await mintGateErc721.setAdminAccess(minterFree.address, true);
+  await mintGateErc721.setAdminAccess(minterAirdrop.address, true);
   await paymentSplitterFactory.setAdminAccess(eclipse.address, true);
   await minter.setAdminAccess(eclipse.address, true);
+  await minterDA.setAdminAccess(eclipse.address, true);
+  await minterFree.setAdminAccess(eclipse.address, true);
+  await minterAirdrop.setAdminAccess(eclipse.address, true);
   await store.setAdminAccess(eclipse.address, true);
 }
 
