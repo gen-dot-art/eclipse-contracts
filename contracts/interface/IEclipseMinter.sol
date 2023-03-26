@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.0;
 
+import {UserMint} from "./IEclipseMintGate.sol";
+
 interface IEclipseMinter {
     function mintOne(address collection, uint8 index) external payable;
 
@@ -20,7 +22,7 @@ interface IEclipseMinter {
         address collection,
         uint8 index,
         address user
-    ) external view returns (uint24);
+    ) external view returns (UserMint memory);
 
     function setPricing(
         address collection,

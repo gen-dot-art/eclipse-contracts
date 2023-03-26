@@ -6,7 +6,7 @@ import {EclipseAccess} from "../access/EclipseAccess.sol";
 import {Eclipse} from "../app/Eclipse.sol";
 import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
 import {IEclipseERC721} from "../interface/IEclipseERC721.sol";
-import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
+import {IEclipseMintGate, UserMint} from "../interface/IEclipseMintGate.sol";
 import {IEclipsePaymentSplitter} from "../interface/IEclipsePaymentSplitter.sol";
 
 /**
@@ -90,6 +90,21 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
         return gates[minterContract][collection][index].getAllowedMints(user);
     }
 
+    /**
+     *@dev Get allowed mints and amount of minted tokens for collection
+     */
+    function getUserMint(
+        address collection,
+        address minterContract,
+        uint8 index,
+        address user
+    ) public view override returns (UserMint memory) {
+        MintAlloc.State storage mintAlloc = gates[minterContract][collection][
+            index
+        ];
+        return UserMint(mintAlloc.getAllowedMints(user), mintAlloc.minted);
+    }
+
     function isUserAllowed(
         address collection,
         address minterContract,
@@ -108,7 +123,7 @@ contract EclipseMintGatePublic is EclipseAccess, IEclipseMintGate {
         return gates[minterContract][collection][index].minted;
     }
 
-    function getGateConfig(
+    function getGateState(
         address collection,
         address minterContract,
         uint8 index

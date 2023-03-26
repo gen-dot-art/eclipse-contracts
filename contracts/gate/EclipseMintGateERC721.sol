@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 import {EclipseAccess} from "../access/EclipseAccess.sol";
 import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
-import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
+import {IEclipseMintGate, UserMint} from "../interface/IEclipseMintGate.sol";
 import {MintAllocERC721} from "./MintAllocERC721.sol";
 import {IERC721} from "@openzeppelin/contracts/interfaces/IERC721.sol";
 
@@ -80,6 +80,21 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         return gates[minterContract][collection][index].getAllowedMints(user);
     }
 
+    /**
+     *@dev Get allowed mints and amount of minted tokens for collection
+     */
+    function getUserMint(
+        address collection,
+        address minterContract,
+        uint8 index,
+        address user
+    ) public view override returns (UserMint memory) {
+        MintAllocERC721.State storage mintAlloc = gates[minterContract][
+            collection
+        ][index];
+        return UserMint(mintAlloc.getAllowedMints(user), mintAlloc.minted);
+    }
+
     function update(
         address collection,
         address minterContract,
@@ -90,7 +105,7 @@ contract EclipseMintGateERC721 is EclipseAccess, IEclipseMintGate {
         gates[minterContract][collection][index].update(user, amount);
     }
 
-    function getGateConfig(
+    function getGateState(
         address collection,
         address minterContract,
         uint8 index

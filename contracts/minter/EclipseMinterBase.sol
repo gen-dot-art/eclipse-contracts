@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import {EclipseAccess} from "../access/EclipseAccess.sol";
 import {Eclipse} from "../app/Eclipse.sol";
 import {IEclipseMinter} from "../interface/IEclipseMinter.sol";
-import {IEclipseMintGate} from "../interface/IEclipseMintGate.sol";
+import {IEclipseMintGate, UserMint} from "../interface/IEclipseMintGate.sol";
 
 /**
  * @dev Eclipse base minter
@@ -60,7 +60,7 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
         address collection,
         uint8 index,
         address user
-    ) external view override returns (uint24) {
+    ) external view override returns (UserMint memory) {
         address gateAddress = collections[collection][index].gateAddress;
         IEclipseMintGate gate = IEclipseMintGate(gateAddress);
         uint24 minted = gate.getTotalMinted(collection, address(this), index);
@@ -73,7 +73,8 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
         uint24 availableSupply = collections[collection][index].maxSupply -
             minted;
 
-        return mints > availableSupply ? availableSupply : mints;
+        return
+            UserMint(mints > availableSupply ? availableSupply : mints, minted);
     }
 
     function getAvailableSupply(
