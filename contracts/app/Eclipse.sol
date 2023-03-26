@@ -120,6 +120,8 @@ contract Eclipse is EclipseAccess {
      * Note payee and shares indices must be in respective order
      */
     function createCollection(CreateCollectionParams calldata params) external {
+        uint24 maxSupply = params.maxSupply;
+        require(maxSupply <= 1_000_000, "maxSupply too big");
         address artist = _msgSender();
         _createArtist(artist);
         address paymentSplitter = EclipsePaymentSplitterFactory(
@@ -150,7 +152,7 @@ contract Eclipse is EclipseAccess {
                 params.symbol,
                 params.script,
                 params.collectionType,
-                params.maxSupply,
+                maxSupply,
                 address(this),
                 params.erc721Index,
                 collectionMinters,
