@@ -12,9 +12,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "internalType": "bytes",
@@ -40,9 +40,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "internalType": "address",
@@ -53,9 +53,9 @@
     "name": "getAllowedMints",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "stateMutability": "view",
@@ -74,17 +74,17 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "name": "getTotalMinted",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "stateMutability": "view",
@@ -103,9 +103,55 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getUserMint",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint24",
+            "name": "allowed",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint24",
+            "name": "minted",
+            "type": "uint24"
+          }
+        ],
+        "internalType": "struct UserMint",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "minterContract",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "index",
+        "type": "uint8"
       },
       {
         "internalType": "address",
@@ -137,9 +183,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "internalType": "address",
@@ -147,9 +193,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "name": "update",

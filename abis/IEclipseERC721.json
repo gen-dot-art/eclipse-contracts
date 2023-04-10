@@ -136,32 +136,32 @@
     "outputs": [
       {
         "internalType": "string",
-        "name": "",
+        "name": "name",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "",
+        "name": "symbol",
         "type": "string"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "artist",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "id",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "uint24",
+        "name": "maxSupply",
+        "type": "uint24"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "totalSupply",
         "type": "uint256"
       }
     ],
@@ -210,9 +210,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "maxSupply",
-        "type": "uint256"
+        "type": "uint24"
       },
       {
         "internalType": "address",
@@ -277,9 +277,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "name": "mint",

@@ -9,9 +9,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "paymentType",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "indexed": false,
@@ -66,9 +66,9 @@
     "name": "DOMINATOR",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -163,9 +163,9 @@
             "type": "address[]"
           },
           {
-            "internalType": "uint256[]",
+            "internalType": "uint24[]",
             "name": "shares",
-            "type": "uint256[]"
+            "type": "uint24[]"
           }
         ],
         "internalType": "struct EclipsePaymentSplitter.Payment",
@@ -225,14 +225,14 @@
         "type": "address[]"
       },
       {
-        "internalType": "uint256[]",
+        "internalType": "uint24[]",
         "name": "sharesMint",
-        "type": "uint256[]"
+        "type": "uint24[]"
       },
       {
-        "internalType": "uint256[]",
+        "internalType": "uint24[]",
         "name": "sharesRoyalties",
-        "type": "uint256[]"
+        "type": "uint24[]"
       }
     ],
     "name": "initialize",
@@ -258,9 +258,9 @@
     "name": "platformShare",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -271,9 +271,9 @@
     "name": "platformShareRoyalties",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -384,9 +384,9 @@
         "type": "uint8"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "payeeIndex",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "internalType": "address",

@@ -90,6 +90,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "minter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "bytes32",
         "name": "hash",
         "type": "bytes32"
@@ -178,9 +184,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "maxSupply",
-        "type": "uint256"
+        "type": "uint24"
       },
       {
         "internalType": "address",
@@ -369,32 +375,32 @@
     "outputs": [
       {
         "internalType": "string",
-        "name": "",
+        "name": "_name",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "",
+        "name": "_symbol",
         "type": "string"
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "artist",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "id",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "uint24",
+        "name": "maxSupply",
+        "type": "uint24"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_totalSupply",
         "type": "uint256"
       }
     ],
@@ -443,9 +449,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "maxSupply",
-        "type": "uint256"
+        "type": "uint24"
       },
       {
         "internalType": "address",
@@ -510,9 +516,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "name": "mint",

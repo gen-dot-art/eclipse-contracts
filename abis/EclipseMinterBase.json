@@ -38,11 +38,60 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "collections",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "artist",
+        "type": "address"
+      },
+      {
+        "internalType": "uint48",
+        "name": "startTime",
+        "type": "uint48"
+      },
+      {
+        "internalType": "uint48",
+        "name": "endTime",
+        "type": "uint48"
+      },
+      {
+        "internalType": "uint24",
+        "name": "maxSupply",
+        "type": "uint24"
+      },
+      {
+        "internalType": "address",
+        "name": "gateAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "gateType",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "eclipse",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "contract Eclipse",
         "name": "",
         "type": "address"
       }
@@ -71,9 +120,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "internalType": "address",
@@ -84,9 +133,21 @@
     "name": "getAllowedMintsForUser",
     "outputs": [
       {
-        "internalType": "uint256",
+        "components": [
+          {
+            "internalType": "uint24",
+            "name": "allowed",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint24",
+            "name": "minted",
+            "type": "uint24"
+          }
+        ],
+        "internalType": "struct UserMint",
         "name": "",
-        "type": "uint256"
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -100,9 +161,106 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
+      }
+    ],
+    "name": "getAvailableSupply",
+    "outputs": [
+      {
+        "internalType": "uint24",
+        "name": "available",
+        "type": "uint24"
+      },
+      {
+        "internalType": "uint24",
+        "name": "minted",
+        "type": "uint24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      }
+    ],
+    "name": "getCollectionState",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "artist",
+                "type": "address"
+              },
+              {
+                "internalType": "uint48",
+                "name": "startTime",
+                "type": "uint48"
+              },
+              {
+                "internalType": "uint48",
+                "name": "endTime",
+                "type": "uint48"
+              },
+              {
+                "internalType": "uint24",
+                "name": "maxSupply",
+                "type": "uint24"
+              },
+              {
+                "internalType": "address",
+                "name": "gateAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint8",
+                "name": "gateType",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct EclipseMinterBase.CollectionMintParams",
+            "name": "params",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint24",
+            "name": "available",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint24",
+            "name": "minted",
+            "type": "uint24"
+          }
+        ],
+        "internalType": "struct EclipseMinterBase.CollectionState[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "index",
+        "type": "uint8"
       }
     ],
     "name": "getPrice",
@@ -124,14 +282,14 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint24",
         "name": "amount",
-        "type": "uint256"
+        "type": "uint24"
       }
     ],
     "name": "mint",
@@ -147,9 +305,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "index",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "name": "mintOne",
@@ -226,6 +384,11 @@
       {
         "internalType": "address",
         "name": "collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "sender",
         "type": "address"
       },
       {

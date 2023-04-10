@@ -51,9 +51,9 @@
             "type": "string"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint24",
             "name": "maxSupply",
-            "type": "uint256"
+            "type": "uint24"
           },
           {
             "internalType": "address",
@@ -189,9 +189,9 @@
             "type": "uint8"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint24",
             "name": "maxSupply",
-            "type": "uint256"
+            "type": "uint24"
           },
           {
             "internalType": "address",
