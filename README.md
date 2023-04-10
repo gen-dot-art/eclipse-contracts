@@ -28,19 +28,37 @@ Contract that allows members to mint tokens by a fixed price from cloned ERC721 
 
 Allows admin to create clone contracts via `EclipseCollectionFactory` and `EclipsePaymentSplitterFactory`.
 
-## Deployed Contracts
+## Deployed Contracts Production
 
-| Name                          | mainnet | goerli                                                                                                                       |
+| Name                          | ethereum | goerli                                                                                                                       |
 | ----------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Eclipse                       | [-]()   | [0xd69559Cd515Be1797Cd79883B4Dc435B8fc06bfb](https://goerli.etherscan.io/address/0xd69559Cd515Be1797Cd79883B4Dc435B8fc06bfb) |
-| EclipseStorage                | [-]()   | [0x31f9B928983373eA18696421046e36dC666d16e5](https://goerli.etherscan.io/address/0x31f9B928983373eA18696421046e36dC666d16e5) |
-| EclipseCollectionFactory      | [-]()   | [0xa567567C3f0dbBab756853dBE97203082B9b4eab](https://goerli.etherscan.io/address/0xa567567C3f0dbBab756853dBE97203082B9b4eab) |
-| EclipsePaymentSplitterFactory | [-]()   | [0x37b89b6404F2C77Ed802BA63452Ebdf4e8D5703A](https://goerli.etherscan.io/address/0x37b89b6404F2C77Ed802BA63452Ebdf4e8D5703A) |
-| EclipseERC721                 | [-]()   | [0xae9C542a1AfbEa57f9A33170244E3b44d495a335](https://goerli.etherscan.io/address/0xae9C542a1AfbEa57f9A33170244E3b44d495a335) |
-| EclipsePaymentSplitter        | [-]()   | [0x99b279583029e51B32ABe72bCc5f374B31440995](https://goerli.etherscan.io/address/0x99b279583029e51B32ABe72bCc5f374B31440995) |
-| EclipseMintGatePublic         | [-]()   | [0x0CFF430025A03D148574d64781D1fa11525DBEE1](https://goerli.etherscan.io/address/0x0CFF430025A03D148574d64781D1fa11525DBEE1) |
-| EclipseMintGateERC721         | [-]()   | [0x8aA4F14461Efea4e12631e3eB618A583839b7C87](https://goerli.etherscan.io/address/0x8aA4F14461Efea4e12631e3eB618A583839b7C87) |
-| EclipseMinterFixedPrice       | [-]()   | [0x62Fb59F357180884958CC5aA3A11DE0C0c21dBf1](https://goerli.etherscan.io/address/0x62Fb59F357180884958CC5aA3A11DE0C0c21dBf1) |
-| EclipseMinterDutchAuction     | [-]()   | [0x59ebA181164412F4c97B7ea77Cef3d12D3Ac28f9](https://goerli.etherscan.io/address/0x59ebA181164412F4c97B7ea77Cef3d12D3Ac28f9) |
-| EclipseMinterFree             | [-]()   | [0x7C8cd067fDb8167CF3a14a8df34bb135D2BA1DA8](https://goerli.etherscan.io/address/0x7C8cd067fDb8167CF3a14a8df34bb135D2BA1DA8) |
-| EclipseMinterAirdrop          | [-]()   | [0x71417909671459C5680E4fB04Ab6b3ba7EFf1b55](https://goerli.etherscan.io/address/0x71417909671459C5680E4fB04Ab6b3ba7EFf1b55) |
+| Eclipse                       | [-]()   | [0x072D7Fe49C12a4FB9f8CF80827DB2D2ADEE87767](https://goerli.etherscan.io/address/0x072D7Fe49C12a4FB9f8CF80827DB2D2ADEE87767) |
+| EclipseStorage                | [-]()   | [0x782F88888463a3Fa62bC608ca713C64104249b9f](https://goerli.etherscan.io/address/0x782F88888463a3Fa62bC608ca713C64104249b9f) |
+| EclipseCollectionFactory      | [-]()   | [0x3A2Ba3be9aCD856a3FDe19E35f2E23665C67605B](https://goerli.etherscan.io/address/0x3A2Ba3be9aCD856a3FDe19E35f2E23665C67605B) |
+| EclipsePaymentSplitterFactory | [-]()   | [0x6d5Be445B9042bB622BA522e2b3817E3b6cBb47a](https://goerli.etherscan.io/address/0x6d5Be445B9042bB622BA522e2b3817E3b6cBb47a) |
+| EclipseERC721                 | [-]()   | [0x9A6b8f379B706C8350C4f82a527ec3217C27b869](https://goerli.etherscan.io/address/0x9A6b8f379B706C8350C4f82a527ec3217C27b869) |
+| EclipsePaymentSplitter        | [-]()   | [0x3720f5108Abe3a379282696f6B782C10D5F9F892](https://goerli.etherscan.io/address/0x3720f5108Abe3a379282696f6B782C10D5F9F892) |
+| EclipseMintGatePublic         | [-]()   | [0xb0490bb81631A4EA287bea3F48443776b523975E](https://goerli.etherscan.io/address/0xb0490bb81631A4EA287bea3F48443776b523975E) |
+| EclipseMintGateERC721         | [-]()   | [0x8187AFF484eB5b1D3DFA4466149e706c9201eE29](https://goerli.etherscan.io/address/0x8187AFF484eB5b1D3DFA4466149e706c9201eE29) |
+| EclipseMinterFixedPrice       | [-]()   | [0xe447cec4f649E302C063b850dc134a868da196fb](https://goerli.etherscan.io/address/0xe447cec4f649E302C063b850dc134a868da196fb) |
+| EclipseMinterDutchAuction     | [-]()   | [0x3306E0424517E63B4D44F780a2794695bBFc4a68](https://goerli.etherscan.io/address/0x3306E0424517E63B4D44F780a2794695bBFc4a68) |
+| EclipseMinterFree             | [-]()   | [0x932eaf75e8DEeAa0e994548FA35A48F1Ab4E78F9](https://goerli.etherscan.io/address/0x932eaf75e8DEeAa0e994548FA35A48F1Ab4E78F9) |
+| EclipseMinterAirdrop          | [-]()   | [0x011aFaBfB8E630Ba1a46D070A9A8693d62F13731](https://goerli.etherscan.io/address/0x011aFaBfB8E630Ba1a46D070A9A8693d62F13731) |
+
+
+## Deployed Contracts Test
+
+| Name                          | ethereum | goerli                                                                                                                       |
+| ----------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Eclipse                       | [-]()   | [0x290fd1652A0B5A21721cfb0A3Fa1F6d02d1bFB3C](https://goerli.etherscan.io/address/0x290fd1652A0B5A21721cfb0A3Fa1F6d02d1bFB3C) |
+| EclipseStorage                | [-]()   | [0x7C595C9D2cD2FC52e989DEBEA89C89c262AEfE3d](https://goerli.etherscan.io/address/0x7C595C9D2cD2FC52e989DEBEA89C89c262AEfE3d) |
+| EclipseCollectionFactory      | [-]()   | [0xeFeC2cd927d3539164C4763788F5d0FEe165caaF](https://goerli.etherscan.io/address/0xeFeC2cd927d3539164C4763788F5d0FEe165caaF) |
+| EclipsePaymentSplitterFactory | [-]()   | [0x74A75b76988b2bA5B8E92A34796b780802DF7815](https://goerli.etherscan.io/address/0x74A75b76988b2bA5B8E92A34796b780802DF7815) |
+| EclipseERC721                 | [-]()   | [0x9A6b8f379B706C8350C4f82a527ec3217C27b869](https://goerli.etherscan.io/address/0x9A6b8f379B706C8350C4f82a527ec3217C27b869) |
+| EclipsePaymentSplitter        | [-]()   | [0xdB0fc195B1B8Abb304780D530D86C2D04D9eaC83](https://goerli.etherscan.io/address/0xdB0fc195B1B8Abb304780D530D86C2D04D9eaC83) |
+| EclipseMintGatePublic         | [-]()   | [0x4D038c187201c1D54677ba8F6aa91A697a6D1293](https://goerli.etherscan.io/address/0x4D038c187201c1D54677ba8F6aa91A697a6D1293) |
+| EclipseMintGateERC721         | [-]()   | [0x26Fd2faB260fa452675483F7cb65FA3411baf1Df](https://goerli.etherscan.io/address/0x26Fd2faB260fa452675483F7cb65FA3411baf1Df) |
+| EclipseMinterFixedPrice       | [-]()   | [0x395921E93Be76f73bA2A2799b36a3e8df602aa5f](https://goerli.etherscan.io/address/0x395921E93Be76f73bA2A2799b36a3e8df602aa5f) |
+| EclipseMinterDutchAuction     | [-]()   | [0x8E9f60465EF3bC9cb5dA53ea756d621F85C60AD9](https://goerli.etherscan.io/address/0x8E9f60465EF3bC9cb5dA53ea756d621F85C60AD9) |
+| EclipseMinterFree             | [-]()   | [0x0e93252BAb3B73E57eDad721617C20Dc34751C89](https://goerli.etherscan.io/address/0x0e93252BAb3B73E57eDad721617C20Dc34751C89) |
+| EclipseMinterAirdrop          | [-]()   | [0xBAAd96fb04A3Fd4A40349D17c6f0FFcC7dC536Da](https://goerli.etherscan.io/address/0xBAAd96fb04A3Fd4A40349D17c6f0FFcC7dC536Da) |
