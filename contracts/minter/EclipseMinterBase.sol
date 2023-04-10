@@ -27,8 +27,8 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
 
     struct CollectionState {
         CollectionMintParams params;
-        uint24 minted;
         uint24 available;
+        uint24 minted;
     }
     Eclipse public eclipse;
 
@@ -48,12 +48,19 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
     function _getAvailableSupply(
         address collection,
         uint8 index
-    ) internal view returns (uint24) {
+    ) internal view returns (uint24 available, uint24 minted) {
         address gateAddress = collections[collection][index].gateAddress;
         IEclipseMintGate gate = IEclipseMintGate(gateAddress);
-        uint24 minted = gate.getTotalMinted(collection, address(this), index);
+        uint24 totalMinted = gate.getTotalMinted(
+            collection,
+            address(this),
+            index
+        );
 
-        return collections[collection][index].maxSupply - minted;
+        return (
+            collections[collection][index].maxSupply - totalMinted,
+            totalMinted
+        );
     }
 
     function getAllowedMintsForUser(
@@ -69,7 +76,7 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
     function getAvailableSupply(
         address collection,
         uint8 index
-    ) external view override returns (uint24) {
+    ) external view override returns (uint24 available, uint24 minted) {
         return _getAvailableSupply(collection, index);
     }
 
@@ -81,13 +88,11 @@ abstract contract EclipseMinterBase is EclipseAccess, IEclipseMinter {
             params.length
         );
         for (uint8 i; i < params.length; i++) {
-            uint24 minted = IEclipseMintGate(params[i].gateAddress)
-                .getTotalMinted(collection, address(this), i);
-            returnArr[i] = CollectionState(
-                params[i],
-                minted,
-                _getAvailableSupply(collection, i)
+            (uint24 available, uint24 minted) = _getAvailableSupply(
+                collection,
+                i
             );
+            returnArr[i] = CollectionState(params[i], available, minted);
         }
 
         return returnArr;

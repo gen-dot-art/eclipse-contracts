@@ -33,5 +33,5 @@ interface IEclipseMinter {
     function getAvailableSupply(
         address collection,
         uint8 index
-    ) external view returns (uint24);
+    ) external view returns (uint24 available, uint24 minted);
 }

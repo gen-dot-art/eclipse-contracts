@@ -89,8 +89,9 @@ contract EclipseERC721 is
     function _checkMint(uint24 amount) internal view {
         require(_minters[_msgSender()], "only minter allowed");
         require(!_paused, "minting paused");
-        uint256 totalSupply = totalSupply();
         uint256 maxSupply = _info.maxSupply;
+        if (maxSupply == 0) return;
+        uint256 totalSupply = totalSupply();
         require(totalSupply < maxSupply, "sold out");
         require(
             totalSupply + amount <= maxSupply,
