@@ -15,9 +15,4 @@ The url must be in form of: `https://my-url.com/`
 
 Example Contract: [0x5e53e562d26e2f392715c51f7affe3e176cbfa66](https://etherscan.io/address/0x5e53e562d26e2f392715c51f7affe3e176cbfa66#writeContract)
 
-## Custom Minter
 
-Collections can use custom implemented Minter contracts to mint new tokens. In order do that the contract owner has to do the following steps:
-
-1. Implement and deploy a custom Minter contract by using the [EclipseMinterCustom](../contracts/minter/EclipseMinterCustom.sol) as a blueprint.
-2. Enable the new deployed Minter contract on the collection's contract by calling the `setMinter` function which takes the minters contract address and a boolean whether it should be enabled.
