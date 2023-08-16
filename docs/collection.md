@@ -15,4 +15,6 @@ The url must be in form of: `https://my-url.com/`
 
 Example Contract: [0x5e53e562d26e2f392715c51f7affe3e176cbfa66](https://etherscan.io/address/0x5e53e562d26e2f392715c51f7affe3e176cbfa66#writeContract)
 
-
+## Royalties
+By default the receiver of the royalties is set on a PaymentSplitter contract. To change the receiver the owner has to call the `setRoyaltyReceiver` function on the collection's contract. The function takes the receivers address and the bps of royalty fee. 
+__NOTE:__ The dominator is `10.000`. 
